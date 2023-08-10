@@ -9,6 +9,7 @@
      </div>
     <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary float-left">Custom Footer</h6>
+      <a href="{{route('custom.create')}}" class="btn btn-pink btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Custom</a>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -18,22 +19,18 @@
             <tr>
               <th>S.N.</th>
               <th>name</th>
-              <th>Footer1</th>
-              <th>Footer2</th>
-              <th>Footer3</th>
-              <th>Footer4</th>
-              <th>action</th>
+              <th>Instagram</th>
+              <th>Photo</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
               <th>S.N.</th>
               <th>name</th>
-              <th>Footer1</th>
-              <th>Footer2</th>
-              <th>Footer3</th>
-              <th>Footer4</th>
-              <th>action</th>
+              <th>Instagram</th>
+              <th>Photo</th>
+              <th>Action</th>
               </tr>
           </tfoot>
           <tbody>
@@ -41,10 +38,8 @@
                 <tr>
                     <td>{{$item->id}}</td>
                     <td>{{$item->name}}</td>
-                    <td>{{$item->footer1}}</td>
-                    <td>{{$item->footer2}}</td>
-                    <td>{{$item->footer3}}</td>
-                    <td>{{$item->footer4}}</td>
+                    <td>{{$item->instagram}}</td>
+                    <td>{{$item->photo}}</td>
                     <td>
                       <a href="{{route('custom.edit',$item->id)}}" class="btn btn-primary btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit" data-placement="bottom"><i class="fas fa-edit"></i></a>
                     </td>

@@ -31,6 +31,8 @@
     <link rel="stylesheet" href="{{asset('frontend/css/responsive.css')}}">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{asset('frontend/css/custom.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
 
 </head>
 
@@ -81,6 +83,7 @@
                         </ul>
                     </div>
                 </div>
+                
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 					<div class="login-box">
 						<select id="basic" class="selectpicker show-tick form-control" data-placeholder="Sign In">
@@ -88,33 +91,20 @@
 							<option>Sign In</option>
 						</select>
 					</div>
+                    
+                    @php
+                        $section=DB::table('section')->where('status','active')->paginate(6);
+                    @endphp
                     <div class="text-slid-box">
                         <div id="offer-box" class="carouselTicker">
                             <ul class="offer-box">
+                                @if ($section)
+                                @foreach ($section as $sections)
                                 <li>
-                                    <i class="fab fa-opencart"></i> 20% off Entire Purchase Promo code: offT80
+                                    <i class="fab fa-opencart"></i> {{$sections->name}}
                                 </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> 50% - 80% off on Vegetables
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> Off 10%! Shop Vegetables
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> Off 50%! Shop Now
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> Off 10%! Shop Vegetables
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> 50% - 80% off on Vegetables
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> 20% off Entire Purchase Promo code: offT30
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> Off 50%! Shop Now 
-                                </li>
+                                @endforeach                                    
+                                @endif
                             </ul>
                         </div>
                     </div>
@@ -144,7 +134,7 @@
                         <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{route('about.us')}}">About Us</a></li>
                         <li class="dropdown">
-                            <a href="#" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">SHOP</a>
+                            <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">SHOP &darr;</a>
                             <ul class="dropdown-menu">
 								<li><a href="{{route('product-list')}}">Sidebar Shop</a></li>
                                 <li><a href="{{route('cart')}}">Cart</a></li>
@@ -163,7 +153,7 @@
                                 <li><a href="{{route('wishlist')}}">Wishlist</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{route('gallery')}}">Gallery</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Contact Us</a></li>
                     </ul>
                 </div>
@@ -176,7 +166,7 @@
                         <li class="side-menu">
 							<a href="#">
 								<i class="fa fa-shopping-bag"></i>
-								<span class="badge">3</span>
+								<span class="cart-item_count">{{Helper::cartCount()}}</span>
 								<p>My Cart</p>
 							</a>
 						</li>
@@ -185,29 +175,35 @@
                 <!-- End Atribute Navigation -->
             </div>
             <!-- Start Side Menu -->
+            @php 
+                $total_prod=0;
+                $total_amount=0;
+            @endphp
             <div class="side">
                 <a href="#" class="close-side"><i class="fa fa-times"></i></a>
                 <li class="cart-box">
+                    @php
+                        $cartItems = Helper::getAllProductFromCart();
+                        $currency = '';
+                    @endphp
                     <ul class="cart-list">
+                        @auth
+                        @foreach (Helper::getAllProductFromCart() as $item)
                         <li>
-                            <a href="#" class="photo"><img src="images/img-pro-01.jpg" class="cart-thumb" alt="" /></a>
-                            <h6><a href="#">Delica omtantur </a></h6>
-                            <p>1x - <span class="price">$80.00</span></p>
+                            @php
+                                $photo=explode(',',$item->product['photo']);
+                                $currency = $item->product->currency;
+                            @endphp
+                            <a href="{{route('product-detail',$item->product['slug'])}}" class="photo"><img src="{{$photo[0]}}" alt="{{$photo[0]}}" class="cart-thumb" /></a>
+                            <h6><a href="{{route('product-detail',$item->product['slug'])}}">{{$item->product['title']}} </a></h6>
+                            <p>{{$item->quantity}}x - <span class="price">{{ $currency }} {{number_format($item->price,2)}}</span></p>
                         </li>
-                        <li>
-                            <a href="#" class="photo"><img src="images/img-pro-02.jpg" class="cart-thumb" alt="" /></a>
-                            <h6><a href="#">Omnes ocurreret</a></h6>
-                            <p>1x - <span class="price">$60.00</span></p>
-                        </li>
-                        <li>
-                            <a href="#" class="photo"><img src="images/img-pro-03.jpg" class="cart-thumb" alt="" /></a>
-                            <h6><a href="#">Agam facilisis</a></h6>
-                            <p>1x - <span class="price">$40.00</span></p>
-                        </li>
+                        @endforeach
                         <li class="total">
-                            <a href="#" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
-                            <span class="float-right"><strong>Total</strong>: $180.00</span>
+                            <a href="{{route('cart')}}" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
+                            <span class="float-right">{{ $currency }} {{number_format(Helper::totalCartPrice(),2)}}</span>
                         </li>
+                        @endauth
                     </ul>
                 </li>
             </div>
@@ -220,60 +216,43 @@
     <!-- Start Top Search -->
     <div class="top-search">
         <div class="container">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                <input type="text" class="form-control" placeholder="Search">
-                <span class="input-group-addon close-search"><i class="fa fa-times"></i></span>
-            </div>
+            <form method="POST" action="{{route('product.search')}}">
+                @csrf
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input type="text" name="search" class="form-control" placeholder="Search">
+                    <span class="input-group-addon close-search"><i class="fa fa-times"></i></span>
+                </div>
+            </form> 
         </div>
     </div>
     <!-- End Top Search -->
 
     <!-- Start Slider -->
+    @if($banner)
     <div id="slides-shop" class="cover-slides">
         <ul class="slides-container">
+            @foreach ($banner as $banners)
             <li class="text-center">
-                <img src="images/banner-01.jpg" alt="">
+                <img src="{{$banners->photo}}" alt="">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
-                            <h1 class="m-b-20"><strong>Welcome To <br> Freshshop</strong></h1>
-                            <p class="m-b-40">See how your users experience your website in realtime or view <br> trends to see any changes in performance over time.</p>
+                            <h1 class="m-b-20"><strong>{{$banners->title}}</strong></h1>
+                            <p class="m-b-40">{{$banners->description}}</p>
                             <p><a class="btn hvr-hover" href="#">Shop New</a></p>
                         </div>
                     </div>
                 </div>
             </li>
-            <li class="text-center">
-                <img src="images/banner-02.jpg" alt="">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="m-b-20"><strong>Welcome To <br> Freshshop</strong></h1>
-                            <p class="m-b-40">See how your users experience your website in realtime or view <br> trends to see any changes in performance over time.</p>
-                            <p><a class="btn hvr-hover" href="#">Shop New</a></p>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="text-center">
-                <img src="images/banner-03.jpg" alt="">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="m-b-20"><strong>Welcome To <br> Freshshop</strong></h1>
-                            <p class="m-b-40">See how your users experience your website in realtime or view <br> trends to see any changes in performance over time.</p>
-                            <p><a class="btn hvr-hover" href="#">Shop New</a></p>
-                        </div>
-                    </div>
-                </div>
-            </li>
+            @endforeach
         </ul>
         <div class="slides-navigation">
             <a href="#" class="next"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
             <a href="#" class="prev"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
         </div>
     </div>
+    @endif
     <!-- End Slider -->
 
     <!-- Start Categories  -->
@@ -320,7 +299,6 @@
                 <div class="col-lg-12">
                     <div class="title-all text-center">
                         <h1>Fruits & Vegetables</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet lacus enim.</p>
                     </div>
                 </div>
             </div>
@@ -328,7 +306,7 @@
                 <div class="col-lg-12">
                     <div class="special-menu text-center">
                         @php
-                            $categories=DB::table('categories')->where('status','active')->where('is_parent',1)->paginate(10);;
+                            $categories=DB::table('categories')->where('status','active')->where('is_parent',1)->paginate(10);
                             // dd($categories);
                         @endphp
                         <div class="button-group filter-button-group">
@@ -349,21 +327,36 @@
                     <div class="products-single fix">
                         <div class="box-img-hover">
                             <div class="type-lb">
-                                <p class="sale">Sale</p>
+                                @if($product->stock<=0)
+                                <p class="out-of-stock">Sale out</p>
+                            @elseif($product->condition=='new')
+                                <p class="new">New</p>
+                            @elseif($product->condition=='hot')
+                                <p class="hot">Hot</p>
+                            @else
+                                <p class="price-dec">{{$product->discount}}% Off</p>
+                            @endif
                             </div>
-                            <img src="images/img-pro-01.jpg" class="img-fluid" alt="Image">
+                            @php
+                                $photo=explode(',',$product->photo);
+                                // dd($photo);
+                            @endphp
+                            <img src="{{$photo[0]}}" class="img-fluid" alt="Image">
                             <div class="mask-icon">
                                 <ul>
                                     <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
                                     <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                    <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                                    <li><a href="{{route('add-to-wishlist',$product->slug)}}" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
                                 </ul>
-                                <a class="cart" href="#">Add to Cart</a>
+                                <a class="cart" href="{{route('add-to-cart',$product->slug)}}">Add to Cart</a>
                             </div>
                         </div>
                         <div class="why-text">
-                            <h4>Lorem ipsum dolor sit amet</h4>
-                            <h5> $7.79</h5>
+                            <h4>{{$product->title}}</h4>
+                            @php
+                                $after_discount=($product->price-($product->price*$product->discount)/100);
+                            @endphp
+                            <h5> {{number_format($after_discount,2)}}</h5>
                         </div>
                     </div>
                 </div>
@@ -372,98 +365,33 @@
         </div>
     </div>
     <!-- End Products  -->
-
-
-
+    @php
+         $instagramfeed=DB::table('instagram_feed')->where('status','active')->paginate(10);
+    @endphp
     <!-- Start Instagram Feed  -->
+    @if($instagramfeed)
     <div class="instagram-box">
         <div class="main-instagram owl-carousel owl-theme">
+            @foreach ($instagramfeed as $instagramcustom)
             <div class="item">
                 <div class="ins-inner-box">
-                    <img src="images/instagram-img-01.jpg" alt="" />
+                    <img src="{{$instagramcustom->photo}}" alt="" />
                     <div class="hov-in">
                         <a href="#"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-02.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-03.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-04.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-05.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-06.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-07.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-08.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-09.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-05.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
+    @endif
     <!-- End Instagram Feed  -->
 
 
     <!-- Start Footer  -->
+    @php
+        $section2=DB::table('section2')->paginate(3);
+    @endphp
     <footer>
         <div class="footer-main">
             <div class="container">
@@ -471,9 +399,13 @@
 					<div class="col-lg-4 col-md-12 col-sm-12">
 						<div class="footer-top-box">
 							<h3>Business Time</h3>
+                            @if ($section2)
 							<ul class="list-time">
-								<li>Monday - Friday: 08.00am to 05.00pm</li> <li>Saturday: 10.00am to 08.00pm</li> <li>Sunday: <span>Closed</span></li>
+                                @foreach ($section2 as $sections2)
+								<li>{{$sections2->name}}</li>
+                                @endforeach
 							</ul>
+                            @endif
 						</div>
 					</div>
                     @foreach ($emailsettings as $emailsetting)
@@ -493,17 +425,42 @@
 					</div>
                     @endif
                     @endforeach
-					<div class="col-lg-4 col-md-12 col-sm-12">
+					<div class="col-lg-4 col-md-12 col-sm-12"> 
 						<div class="footer-top-box">
 							<h3>Social Media</h3>
 							<ul>
-                                <li><a href="#"><i class="fab fa-facebook" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-google-plus" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-pinterest-p" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-whatsapp" aria-hidden="true"></i></a></li>
+                                @foreach ($settings as $data)
+                                    <li>
+                                        @if ($data->facebook)
+                                        <a href="{{$data->facebook}}"><i class="fab fa-facebook" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->twitter)
+                                        <a href="{{$data->twitter}}"><i class="fab fa-twitter" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->linkedin)
+                                        <a href="{{$data->linkedin}}"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->youtube)
+                                        <a href="{{$data->youtube}}"><i class="fab fa-youtube" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->instagram)
+                                        <a href="{{$data->instagram}}"><i class="fab fa-instagram" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                @endforeach
                             </ul>
 						</div>
 					</div>
@@ -521,12 +478,12 @@
                         <div class="footer-link">
                             <h4>Information</h4>
                             <ul>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Customer Service</a></li>
-                                <li><a href="#">Our Sitemap</a></li>
-                                <li><a href="#">Terms &amp; Conditions</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Delivery Information</a></li>
+                                <li><a href="{{route('about.us')}}">About Us</a></li>
+                                <li><a href="{{route('contact')}}">Contact Us</a></li>
+                                <li><a href="{{route('about.us')}}">Carrer</a></li>
+                                <li><a href="{{route('policy')}}">Terms &amp; Conditions</a></li>
+                                <li><a href="{{route('policy')}}">Privacy Policy</a></li>
+                                <li><a href="{{route('product-list')}}">Shop</a></li>
                             </ul>
                         </div>
                     </div>
@@ -538,10 +495,10 @@
                                     <p><i class="fas fa-map-marker-alt"></i>@foreach($settings as $data) {{$data->address}} @endforeach</p>
                                 </li>
                                 <li>
-                                    <p><i class="fas fa-phone-square"></i>Phone: <a href="tel:+1-888705770">@foreach($settings as $data) {{$data->phone}} @endforeach</a></p>
+                                    <p><i class="fas fa-phone-square"></i>Phone: <a href="">@foreach($settings as $data) {{$data->phone}} @endforeach</a></p>
                                 </li>
                                 <li>
-                                    <p><i class="fas fa-envelope"></i>Email: <a href="mailto:contactinfo@gmail.com">@foreach($settings as $data) {{$data->email}} @endforeach</a></p>
+                                    <p><i class="fas fa-envelope"></i>Email: <a href="">@foreach($settings as $data) {{$data->email}} @endforeach</a></p>
                                 </li>
                             </ul>
                         </div>
@@ -555,8 +512,12 @@
     <!-- Start copyright  -->
     <div class="footer-copyright">
         @foreach ($settings as $data)
-        <p class="footer-company">All Rights Reserved. &copy; 2018 <a href="#">{{$data->title}}</a> Design By :
-            <a href="https://html.design/">html design</a></p>@endforeach
+        <?php $currentYear = date('Y'); ?>
+        <p class="footer-company">All Rights Reserved. &copy; {{ $currentYear }} <a href="#">{{ $data->title }}</a> Develop By :
+            <a href="https://twitter.com/erlang_stack">Erlangga Rychlewski</a>
+        </p>
+        @endforeach
+    
     </div>
     <!-- End copyright  -->
 

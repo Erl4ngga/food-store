@@ -24,10 +24,10 @@ class ProductFactory extends Factory
     public function definition()
     {
         $photos = [
-            '/storage/photos/11/1 (1).jpg',
-            '/storage/photos/11/1 (2).jpg',
-            '/storage/photos/11/1 (3).jpg',
-            '/storage/photos/11/1 (4).jpg',
+            '/storage/photos/52/img-pro-01.jpg',
+            '/storage/photos/52/img-pro-02.jpg',
+            '/storage/photos/52/img-pro-03.jpg',
+            '/storage/photos/52/img-pro-04.jpg',
         ];
     
         $countdown_date = $this->faker->date('Y-m-d', 'now');

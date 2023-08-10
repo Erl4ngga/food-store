@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Custom;
+use App\Models\InstagramFeed;
 use Illuminate\Http\Request;
 
 class CustomController extends Controller
@@ -14,7 +14,7 @@ class CustomController extends Controller
      */
     public function index()
     {
-        $custom=Custom::orderBy('id','DESC')->paginate(10);
+        $custom=InstagramFeed::orderBy('id','DESC')->paginate(10);
         return view('backend.custom_footer.index')->with('custom',$custom);
     }
         /**
@@ -25,9 +25,9 @@ class CustomController extends Controller
      */
     public function edit($id)
     {
-        $custom=Custom::find($id);
+        $custom=InstagramFeed::find($id);
         if(!$custom){
-            request()->session()->flash('error','Custom not found');
+            request()->session()->flash('error','InstagramFeed not found');
         }
         return view('backend.custom_footer.edit')->with('custom',$custom);
     }
@@ -38,23 +38,55 @@ class CustomController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $custom=Custom::find($id);
+        $custom=InstagramFeed::find($id);
         $this->validate($request,[
             'name'=>'nullable',
-            'footer1'=>'string|required',
-            'footer2'=>'string|required',
-            'footer3'=>'string|required',
-            'footer4'=>'string|required',
+            'instagram'=>'string|required',
+            'photo'=>'string|required',
+            'status'=>'required|in:active,inactive',
         ]);
         $data=$request->all();
        
         $status=$custom->fill($data)->save();
         if($status){
-            request()->session()->flash('success','Custom successfully updated');
+            request()->session()->flash('success','InstagramFeed successfully updated');
         }
         else{
             request()->session()->flash('error','Error, Please try again');
         }
         return redirect()->route('custom.index');
+    }
+            /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request,[
+            'name'=>'nullable',
+            'instagram'=>'string|required',
+            'photo'=>'string|required',
+            'status'=>'required|in:active,inactive',
+        ]);
+        $data=$request->all();
+        // return $data;
+        $status=InstagramFeed::create($data);
+        if($status){
+            request()->session()->flash('success','InstagramFeed successfully updated');
+        }
+        else{
+            request()->session()->flash('error','Error, Please try again');
+        }
+        return redirect()->route('custom.index');
+    }
+         /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('backend.custom_footer.create');
     }
 }

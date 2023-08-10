@@ -122,22 +122,34 @@ class CartController extends Controller
         return back();       
     } 
     public function cartUpdate(Request $request){
+        // dd($request->all());
         if($request->quant){
             $error = array();
             $success = '';
+            // return $request->quant;
             foreach ($request->quant as $k=>$quant) {
+                // return $k;
                 $id = $request->qty_id[$k];
+                // return $id;
                 $cart = Cart::find($id);
                 $product = Product::where('id', $cart->product_id)->first();
+                // return $cart;
                 if($quant > 0 && $cart) {
+
+
+                    // return $quant;
+
                     if($cart->product->stock < $quant ){
-                        request()->session()->flash('error','Out of Stock');
+                        request()->session()->flash('error','Stok Habis');
                         return back();
                     }
                     $cart->quantity = ($cart->product->stock > $quant) ? $quant  : $cart->product->stock;
+                    // return $cart;
+                    
                     if ($cart->product->stock <=0) continue;
                     $after_price=($cart->product->price-($cart->product->price*$cart->product->discount)/100);
                     $cart->amount = $after_price * $quant;
+                    // return $cart->price;
                     $cart->save();
                     $success = 'Cart successfully updated!';
                 }else{

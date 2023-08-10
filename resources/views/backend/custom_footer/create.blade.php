@@ -3,30 +3,54 @@
 @section('main-content')
 
 <div class="card">
-    <h5 class="card-header">Add FAQ</h5>
+    <h5 class="card-header">Post</h5>
     <div class="card-body">
-      <form method="post" action="{{route('faq.store')}}">
-        {{csrf_field()}}
-        <div class="form-group">
-          <label for="inputTitle" class="col-form-label">question <span class="text-danger">*</span></label>
-          <input id="inputTitle" type="text" name="question" placeholder="Question"  value="{{old('question')}}" class="form-control">
+    <form method="post" action="{{route('custom.store')}}">
+        @csrf 
+        {{-- {{dd($data)}} --}}
+        <div class="question">
+          <label class="col-form-label">name</label>
+          <textarea class="form-control" name="name" readonly>Instagram</textarea>
+          @error('question')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+        <div class="question">
+          <label for="question" class="col-form-label">Link Instragram <span class="question">*</span></label>
+          <textarea class="form-control" name="instagram">Instagram.com</textarea>
           @error('question')
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
         <div class="form-group">
-            <label for="answer" class="col-form-label">answer</label>
-            <textarea class="form-control" id="answer" name="answer">{{old('answer')}}</textarea>
-            @error('answer')
+          <label for="inputPhoto" class="col-form-label">Photo <span class="text-danger">*</span></label>
+          <div class="input-group">
+              <span class="input-group-btn">
+                  <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                  <i class="fa fa-picture-o"></i> Choose
+                  </a>
+              </span>
+            <input id="thumbnail" class="form-control" type="text" name="photo" value="">
+          </div>
+          <div id="holder" style="margin-top:15px;max-height:100px;"></div>
+            @error('photo')
             <span class="text-danger">{{$message}}</span>
             @enderror
           </div>
-        {{-- {{$parent_cats}} --}}
+          <div class="form-group">
+            <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
+            <select name="status" class="form-control">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+            @error('status')
+            <span class="text-danger">{{$message}}</span>
+            @enderror
+          </div>
         <div class="form-group mb-3">
-          <button type="reset" class="btn btn-warning">Reset</button>
-           <button class="btn btn-success" type="submit">Submit</button>
+           <button class="btn btn-success" type="submit">Update</button>
         </div>
-      </form>
+    </form>
     </div>
 </div>
 
@@ -34,38 +58,35 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{asset('backend/summernote/summernote.min.css')}}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+
 @endpush
 @push('scripts')
 <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 <script src="{{asset('backend/summernote/summernote.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
 <script>
     $('#lfm').filemanager('image');
+    $('#lfm1').filemanager('image');
+    $(document).ready(function() {
+    $('#summary').summernote({
+      placeholder: "Write short description.....",
+        tabsize: 2,
+        height: 150
+    });
+    });
 
     $(document).ready(function() {
-      $('#summary').summernote({
-        placeholder: "Write short description.....",
+      $('#name').summernote({
+        placeholder: "Write short name....",
           tabsize: 2,
-          height: 120
+          height: 100
       });
     });
-</script>
-
-<script>
-  $('#is_parent').change(function(){
-    var is_checked=$('#is_parent').prop('checked');
-    // alert(is_checked);
-    if(is_checked){
-      $('#parent_cat_div').addClass('d-none');
-      $('#parent_cat_div').val('');
-    }
-    else{
-      $('#parent_cat_div').removeClass('d-none');
-    }
-  })
-
-  $(document).ready(function() {
-      $('#answer').summernote({
-        placeholder: "Write detail answer.....",
+    $(document).ready(function() {
+      $('#instagram').summernote({
+        placeholder: "Write detail instagram.....",
           tabsize: 2,
           height: 150
       });

@@ -177,7 +177,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{route('custom.index')}}">
                     <i class="material-icons">&#xe242;</i>
-                    <span>Custom Footer</span>
+                    <span>Custom </span>
                 </a>
             </li>
             <li class="nav-item">

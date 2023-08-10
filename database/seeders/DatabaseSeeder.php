@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\Category;
+use App\Models\InstagramFeed;
 use App\Models\ProductReview;
 class DatabaseSeeder extends Seeder
 {
@@ -20,10 +21,11 @@ class DatabaseSeeder extends Seeder
           \App\Models\Product::factory(4)->create();
           \App\Models\User::factory(1)->create();
           \App\Models\Brand::factory(1)->create();
+          InstagramFeed::factory(10)->create();
 
         \App\Models\User::factory()->create([
             'name' => 'Test User',
-            'photo' => '/Erlangga.jpg',
+            'photo' => '/storage/photos/52/img-1.jpg',
             'email' => 'test@example.com',
             'password' => Hash::make('1111'),
            'role'=>'admin',
@@ -44,8 +46,8 @@ class DatabaseSeeder extends Seeder
         'title'=>'sun-mart',
         'description'=>"halo ke startup saya",
         'short_des'=>"Lorem the It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
-        'photo'=> "/images/bg/1.jpg",
-        'logo'=>"images/logo.png",
+        'photo'=> "/storage/photos/52/ins-bg.jpg",
+        'logo'=>"/storage/photos/52/logo.png",
         'address'=>"NO. 342 - London Oxford Street, 012 United Kingdom",
         'email'=>"widoerlangga212@gmail.com",
         'phone'=>"+060 (800) 801-582",
@@ -75,13 +77,77 @@ class DatabaseSeeder extends Seeder
         'status'=>'active',       
     ]);
     DB::table('banners')->insert([
-        'title'=>"2023 Flowered",
+        'title'=>"Welcome To
+        Freshshop",
         'url'=>"https://www.youtube.com/",
-        'slug'=>'2023 Flower Trend',
-        'description'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        'photo'=>'/storage/photos/61/img1.png',
+        'slug'=>'Welcome To
+        Freshshop',
+        'description'=>'See how your users experience your website in realtime or view
+        trends to see any changes in performance over time.',
+        'photo'=>'/storage/photos/52/banner-01.jpg',
         'photo2'=>'/storage/photos/61/img1.png',
         'status'=>'active',
     ]);
+    DB::table('banners')->insert([
+        'title'=>"Welcome To
+        Freshshop",
+        'url'=>"https://www.youtube.com/",
+        'slug'=>'Welcome To
+        Freshsh',
+        'description'=>'See how your users experience your website in realtime or view
+        trends to see any changes in performance over time.',
+        'photo'=>'/storage/photos/52/banner-02.jpg',
+        'photo2'=>'/storage/photos/61/img1.png',
+        'status'=>'active',
+    ]);
+    DB::table('section')->insert([
+        'title'=>"Header1",
+        'name'=>'20% off Entire Purchase Promo code: offT80',
+        'status'=>'active',
+    ]);
+    DB::table('section')->insert([
+        'title'=>"Header2",
+        'name'=>'50% - 80% off on Vegetables',
+        'status'=>'active',
+    ]);
+    DB::table('section')->insert([
+        'title'=>"Header3",
+        'name'=>'Off 10%! Shop Vegetables',
+        'status'=>'active',
+    ]);
+    DB::table('section')->insert([
+        'title'=>"Header4",
+        'name'=>' Off 50%! Shop Now',
+        'status'=>'active',
+    ]);
+    DB::table('section')->insert([
+        'title'=>"Header5",
+        'name'=>'Off 10%! Shop Vegetables',
+        'status'=>'active',
+    ]);
+    DB::table('section')->insert([
+        'title'=>"Header6",
+        'name'=>'Off 50%! Shop Now ',
+        'status'=>'active',
+    ]);
+    DB::table('section2')->insert([
+        'title'=>"Footer1",
+        'name'=>'Monday - Friday: 08.00am to 05.00pm',
+    ]);
+    DB::table('section2')->insert([
+        'title'=>"Footer2",
+        'name'=>'Saturday: 10.00am to 08.00pm',
+    ]);
+    DB::table('section2')->insert([
+        'title'=>"Footer3",
+        'name'=>'Saturday: 10.00am to 08.00pm',
+    ]);
+    DB::table('coupons')->insert([
+        'code'=>'baru2023',
+        'type'=>'fixed',
+        'value'=>'300',
+        'status'=>'active'
+    ]);
+    
     }
 }

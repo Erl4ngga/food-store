@@ -11,39 +11,43 @@
         {{-- {{dd($data)}} --}}
         <div class="question">
           <label class="col-form-label">name</label>
-          <textarea class="form-control" name="question" readonly>{{$custom->name}}</textarea>
-          @error('question')
+          <textarea class="form-control" name="name" readonly>{{$custom->name}}</textarea>
+          @error('name')
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
         <div class="question">
-          <label for="question" class="col-form-label">Footer 1 <span class="question">*</span></label>
-          <textarea class="form-control" name="footer1">{{$custom->footer1}}</textarea>
-          @error('question')
+          <label for="question" class="col-form-label">instagram <span class="question">*</span></label>
+          <textarea class="form-control" name="footer1">{{$custom->instagram}}</textarea>
+          @error('instagram')
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
-        <div class="question">
-          <label for="question" class="col-form-label">Footer 2 <span class="question">*</span></label>
-          <textarea class="form-control" name="footer2">{{$custom->footer2}}</textarea>
-          @error('question')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
-        </div>
-        <div class="question">
-          <label for="question" class="col-form-label">Footer 3 <span class="question">*</span></label>
-          <textarea class="form-control" name="footer3">{{$custom->footer3}}</textarea>
-          @error('question')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
-        </div>
-        <div class="question">
-          <label for="question" class="col-form-label">Footer 4 <span class="question">*</span></label>
-          <textarea class="form-control" name="footer4">{{$custom->footer4}}</textarea>
-          @error('question')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
-        </div>
+        <div class="form-group">
+          <label for="inputPhoto" class="col-form-label">Photo <span class="text-danger">*</span></label>
+          <div class="input-group">
+              <span class="input-group-btn">
+                  <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                  <i class="fa fa-picture-o"></i> Choose
+                  </a>
+              </span>
+            <input id="thumbnail" class="form-control" type="text" name="photo" value="{{$custom->photo}}">
+          </div>
+          <div id="holder" style="margin-top:15px;max-height:100px;"></div>
+            @error('photo')
+            <span class="text-danger">{{$message}}</span>
+            @enderror
+          </div>
+          <div class="form-group">
+            <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
+            <select name="status" class="form-control">
+              <option value="active" {{(($custom->status=='active') ? 'selected' : '')}}>Active</option>
+              <option value="inactive" {{(($custom->status=='inactive') ? 'selected' : '')}}>Inactive</option>
+            </select>
+            @error('status')
+            <span class="text-danger">{{$message}}</span>
+            @enderror
+          </div>
         <div class="form-group mb-3">
            <button class="btn btn-success" type="submit">Update</button>
         </div>
@@ -67,7 +71,7 @@
     $('#lfm').filemanager('image');
     $('#lfm1').filemanager('image');
     $(document).ready(function() {
-    $('#summary').summernote({
+    $('#instagram').summernote({
       placeholder: "Write short description.....",
         tabsize: 2,
         height: 150
@@ -75,7 +79,7 @@
     });
 
     $(document).ready(function() {
-      $('#quote').summernote({
+      $('#name').summernote({
         placeholder: "Write short Quote.....",
           tabsize: 2,
           height: 100

@@ -9,5 +9,5 @@ class Section extends Model
 {
     use HasFactory;
     protected $table = 'section';
-    protected $fillable=['title','name'];
+    protected $fillable=['title','name','status'];
 }

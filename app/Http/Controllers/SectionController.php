@@ -100,6 +100,7 @@ class SectionController extends Controller
         $this->validate($request,[
             'title'=>'string|required',
             'name'=>'string|required',
+            'status'=>'required|in:active,inactive',
         ]);
         $data=$request->all();
        

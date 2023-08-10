@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('custom', function (Blueprint $table) {
+        Schema::create('instagram_feed', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('footer1');
-            $table->string('footer2');
-            $table->string('footer3');
-            $table->string('footer4');
+            $table->string('photo')->nullable();
+            $table->string('instagram');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

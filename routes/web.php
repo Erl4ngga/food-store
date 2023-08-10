@@ -31,7 +31,7 @@ Route::match(['get','post'],'/filter' ,[App\Http\Controllers\FrontendController:
 Route::match(['get', 'post'], 'botman', [App\Http\Controllers\BotManController::class, 'handle']);
 Route::post('/subscribe', [App\Http\Controllers\FrontendController::class, 'subscribe'])->name('subscribe');
 Route::get('short-by', [App\Http\Controllers\FrontendController::class, 'shortby'])->name('sort-by');
-
+Route::get('gallery', [App\Http\Controllers\FrontendController::class, 'gallery'])->name('gallery');
 // Order Track
 Route::get('/product/track',[App\Http\Controllers\OrderController::class,'orderTrack'])->name('order.track');
 Route::post('product/track/order',[App\Http\Controllers\OrderController::class,'productTrackOrder'])->name('product.track.order');

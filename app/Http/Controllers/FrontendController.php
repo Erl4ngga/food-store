@@ -34,7 +34,7 @@ class FrontendController extends Controller
     {
         $adminusers = User::where(function ($query) {$query->where('role', 'admin')->orWhere('role', 'shipper');})->orderBy('id', 'ASC')->paginate(4);        
         $users=ProductReview::where('status','active')->orderBy('id','ASC')->paginate(5);
-        $banner=Banner::where('status','active')->orderBy('id','ASC')->limit(1)->get();
+        $banner=Banner::where('status','active')->orderBy('id','ASC')->limit(6)->get();
         $smallerbanner=SmallBanner::where('status','active')->orderBy('id','ASC')->limit(2)->get();
         $categories=Category::where('status','active')->limit(3)->get();   
         $featured=Product::where('status','active')->where('is_featured',1)->where('stock', '>', 0)->orderBy('sold','DESC')->limit(6)->get();
@@ -309,6 +309,11 @@ class FrontendController extends Controller
         $products = $products->paginate(10);
 
      return view('frontend.pages.product-grids', compact('products'));
+    }
+    public function gallery()
+    {
+        $galleryproduct=Product::where('status','active')->where('stock', '>', 0)->limit(50)->get();
+        return view('frontend.pages.gallery')->with('galleryproduct',$galleryproduct);
     }
 
 }

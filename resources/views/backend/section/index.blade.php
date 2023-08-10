@@ -17,16 +17,18 @@
           <thead>
             <tr>
               <th>S.N.</th>
-              <th>question</th>
-              <th>answer</th>
+              <th>Title</th>
+              <th>Name</th>
+              <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
               <th>S.N.</th>
-              <th>question</th>
-              <th>answer</th>
+              <th>Title</th>
+              <th>Name</th>
+              <th>Status</th>
               <th>Action</th>
               </tr>
           </tfoot>
@@ -36,6 +38,13 @@
                     <td>{{$item->id}}</td>
                     <td>{{$item->title}}</td>
                     <td>{{$item->name}}</td>
+                    <td>
+                      @if($item->status=='active')
+                          <span class="badge badge-success">{{$item->status}}</span>
+                      @else
+                          <span class="badge badge-warning">{{$item->status}}</span>
+                      @endif
+                    </td>
                     <td>
                       <a href="{{route('section.edit',$item->id)}}" class="btn btn-primary btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit" data-placement="bottom"><i class="fas fa-edit"></i></a>
                     </td>

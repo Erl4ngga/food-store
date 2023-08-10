@@ -10,16 +10,26 @@
         @method('PATCH')
         {{-- {{dd($data)}} --}}
         <div class="question">
-          <label for="question" class="col-form-label">question <span class="question">*</span></label>
+          <label for="question" class="col-form-label">title<span class="question">*</span></label>
           <textarea class="form-control" id="question" name="title" readonly>{{$section->title}}</textarea>
           @error('question')
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
         <div class="form-group">
-          <label for="answer" class="col-form-label">answer <span class="text-danger">*</span></label>
+          <label for="answer" class="col-form-label">Name<span class="text-danger">*</span></label>
           <textarea class="form-control" id="answer" name="name">{{$section->name}}</textarea>
           @error('answer')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+        <div class="form-group">
+          <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
+          <select name="status" class="form-control">
+            <option value="active" {{(($section->status=='active') ? 'selected' : '')}}>Active</option>
+            <option value="inactive" {{(($section->status=='inactive') ? 'selected' : '')}}>Inactive</option>
+          </select>
+          @error('status')
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>

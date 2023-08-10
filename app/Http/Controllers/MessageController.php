@@ -58,7 +58,7 @@ class MessageController extends Controller
         $data['message']=$message->message;
         $data['subject']=$message->subject;   
         event(new MessageSent($data));
-        exit();
+        return back()->with('success', 'success message');
     }
 
     /**
