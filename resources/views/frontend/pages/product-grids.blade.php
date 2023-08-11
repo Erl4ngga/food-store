@@ -75,19 +75,25 @@
                     </div>
                     <div class="our-link">
                         <ul>
-                            <li><a href="#"><i class="fa fa-user s_color"></i> My Account</a></li>
+                            @if (Auth::check())
+                                @if(Auth::user()->role=='user')
+                                    <li><a  href="{{route('user')}}"><i class="fa fa-user s_color"></i> My Account</a></li>
+                                @else
+                                    <li><a  href="{{route('admin')}}"><i class="fa fa-user s_color"></i> My Account</a></li>
+                                @endif
+                            @endif
                             <li><a href="{{route('order.track')}}"><i class="fas fa-location-arrow"></i>Track Order</a></li>
                             <li><a href="{{route('contact')}}"><i class="fas fa-headset"></i> Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
+                
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-					<div class="login-box">
-						<select id="basic" class="selectpicker show-tick form-control" data-placeholder="Sign In">
-							<option>Register Here</option>
-							<option>Sign In</option>
-						</select>
-					</div>
+                    @if (!Auth::check())
+                        <div class="login-box">
+                            <button type="button" class="btn hvr-hover" data-toggle="modal" data-target="#loginModal">login</button>
+                        </div>
+                    @endif
                     @php
                         $section=DB::table('section')->where('status','active')->paginate(6);
                     @endphp
@@ -144,7 +150,7 @@
                                     <li><a href="{{route('shipper.index')}}">Dashboard shipper</a></li>
                                 @endif
                                 @else
-                                    <li><a href="{{route('user.register')}}">login &amp; register</a></li>
+                                    <li><a href="{{route('register')}}">login &amp; register</a></li>
                                 @endauth
                                 <li><a href="{{route('wishlist')}}">Wishlist</a></li>
                             </ul>
@@ -298,7 +304,7 @@
                                                             <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
                                                             <li><a href="{{route('add-to-wishlist',$product->slug)}}" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
                                                         </ul>
-                                                        <a class="cart" href="#">Add to Cart</a>
+                                                        <a class="cart" href="{{route('add-to-cart',$product->slug)}}">Add to Cart</a>
                                                     </div>
                                                 </div>
                                                 <div class="why-text">
@@ -315,20 +321,30 @@
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane fade" id="list-view">
+                                    @if($products)
+                                    @foreach ($products as $key=>$product)
                                     <div class="list-view-box">
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="products-single fix">
                                                     <div class="box-img-hover">
                                                         <div class="type-lb">
+                                                            @if($product->stock<=0)
+                                                            <p class="out-of-stock">Sale out</p>
+                                                        @elseif($product->condition=='new')
                                                             <p class="new">New</p>
+                                                        @elseif($product->condition=='hot')
+                                                            <p class="hot">Hot</p>
+                                                        @else
+                                                            <p class="price-dec">{{$product->discount}}% Off</p>
+                                                        @endif
                                                         </div>
-                                                        <img src="images/img-pro-01.jpg" class="img-fluid" alt="Image">
+                                                        <img src="{{$product->photo}}" class="img-fluid" alt="Image">
                                                         <div class="mask-icon">
                                                             <ul>
-                                                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
+                                                                <li><a href="{{route('product-detail',$product->slug)}}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
                                                                 <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                                                                <li><a href="{{route('add-to-wishlist',$product->slug)}}" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
                                                             </ul>
 
                                                         </div>
@@ -337,80 +353,16 @@
                                             </div>
                                             <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
                                                 <div class="why-text full-width">
-                                                    <h4>Lorem ipsum dolor sit amet</h4>
-                                                    <h5> <del>$ 60.00</del> $40.79</h5>
-                                                    <p>Integer tincidunt aliquet nibh vitae dictum. In turpis sapien, imperdiet quis magna nec, iaculis ultrices ante. Integer vitae suscipit nisi. Morbi dignissim risus sit amet orci porta, eget aliquam purus
-                                                        sollicitudin. Cras eu metus felis. Sed arcu arcu, sagittis in blandit eu, imperdiet sit amet eros. Donec accumsan nisi purus, quis euismod ex volutpat in. Vestibulum eleifend eros ac lobortis aliquet.
-                                                        Suspendisse at ipsum vel lacus vehicula blandit et sollicitudin quam. Praesent vulputate semper libero pulvinar consequat. Etiam ut placerat lectus.</p>
-                                                    <a class="btn hvr-hover" href="#">Add to Cart</a>
+                                                    <h4>{{$product->title}}</h4>
+                                                    <h5> <del>{{$product->currency }} {{number_format($after_discount,2)}}</del> {{ $product->currency }} {{number_format($product->price,2)}}</h5>
+                                                    <p>{!! html_entity_decode($product->summary) !!}</p>
+                                                    <a class="btn hvr-hover" href="{{route('add-to-cart',$product->slug)}}">Add to Cart</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="list-view-box">
-                                        <div class="row">
-                                            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                                                <div class="products-single fix">
-                                                    <div class="box-img-hover">
-                                                        <div class="type-lb">
-                                                            <p class="sale">Sale</p>
-                                                        </div>
-                                                        <img src="images/img-pro-02.jpg" class="img-fluid" alt="Image">
-                                                        <div class="mask-icon">
-                                                            <ul>
-                                                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
-                                                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
-                                                            </ul>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
-                                                <div class="why-text full-width">
-                                                    <h4>Lorem ipsum dolor sit amet</h4>
-                                                    <h5> <del>$ 60.00</del> $40.79</h5>
-                                                    <p>Integer tincidunt aliquet nibh vitae dictum. In turpis sapien, imperdiet quis magna nec, iaculis ultrices ante. Integer vitae suscipit nisi. Morbi dignissim risus sit amet orci porta, eget aliquam purus
-                                                        sollicitudin. Cras eu metus felis. Sed arcu arcu, sagittis in blandit eu, imperdiet sit amet eros. Donec accumsan nisi purus, quis euismod ex volutpat in. Vestibulum eleifend eros ac lobortis aliquet.
-                                                        Suspendisse at ipsum vel lacus vehicula blandit et sollicitudin quam. Praesent vulputate semper libero pulvinar consequat. Etiam ut placerat lectus.</p>
-                                                    <a class="btn hvr-hover" href="#">Add to Cart</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="list-view-box">
-                                        <div class="row">
-                                            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                                                <div class="products-single fix">
-                                                    <div class="box-img-hover">
-                                                        <div class="type-lb">
-                                                            <p class="sale">Sale</p>
-                                                        </div>
-                                                        <img src="images/img-pro-03.jpg" class="img-fluid" alt="Image">
-                                                        <div class="mask-icon">
-                                                            <ul>
-                                                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
-                                                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
-                                                            </ul>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
-                                                <div class="why-text full-width">
-                                                    <h4>Lorem ipsum dolor sit amet</h4>
-                                                    <h5> <del>$ 60.00</del> $40.79</h5>
-                                                    <p>Integer tincidunt aliquet nibh vitae dictum. In turpis sapien, imperdiet quis magna nec, iaculis ultrices ante. Integer vitae suscipit nisi. Morbi dignissim risus sit amet orci porta, eget aliquam purus
-                                                        sollicitudin. Cras eu metus felis. Sed arcu arcu, sagittis in blandit eu, imperdiet sit amet eros. Donec accumsan nisi purus, quis euismod ex volutpat in. Vestibulum eleifend eros ac lobortis aliquet.
-                                                        Suspendisse at ipsum vel lacus vehicula blandit et sollicitudin quam. Praesent vulputate semper libero pulvinar consequat. Etiam ut placerat lectus.</p>
-                                                    <a class="btn hvr-hover" href="#">Add to Cart</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @endforeach
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -641,6 +593,65 @@
     <script src="{{asset('frontend/js/form-validator.min.js')}}"></script>
     <script src="{{asset('frontend/js/contact-form-script.js')}}"></script>
     <script src="{{asset('frontend/js/custom.js')}}"></script>
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-title text-center">
+                <h4>Login</h4>
+              </div>
+              <div class="d-flex flex-column text-center">
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+            
+                    <!-- Email Address -->
+                    <div class="form-group">
+                        <x-input-label for="email" :value="__('Email')" />
+                        <x-text-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    </div>
+            
+                    <!-- Password -->
+                    <div class="form-group">
+                        <x-input-label for="password" :value="__('Password')" />
+            
+                        <x-text-input id="password" class="form-control"
+                                        type="password"
+                                        name="password"
+                                        required autocomplete="current-password" />
+            
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    </div>
+                    <x-primary-button class="btn hvr-hover">
+                        {{ __('Log in') }}
+                    </x-primary-button>
+                </form>
+                
+                <div class="text-center text-muted delimiter">or use a social network</div>
+                <div class="d-flex justify-content-center social-buttons">
+                  <a  class="btn hvr-hover" href="{{ route('login.redirect', 'google') }}" data-toggle="tooltip" data-placement="top" title="google">
+                    <i class="fab fa-google"></i>
+                  </a>
+                  <a class="btn hvr-hover" href="{{ route('login.redirect', 'facebook') }}" data-toggle="tooltip" data-placement="top" title="Facebook">
+                    <i class="fab fa-facebook"></i>
+                  </a>
+                  <a class="btn hvr-hover" href="{{ route('login.redirect', 'twitter') }}" data-toggle="tooltip" data-placement="top" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </di>
+              </div>
+            </div>
+          </div>
+            <div class="modal-footer d-flex justify-content-center">
+              <div class="signup-section">Not a member yet? <a href="{{ route('register') }}" class="text-info"> Sign Up</a>.</div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

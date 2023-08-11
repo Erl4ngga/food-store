@@ -59,55 +59,61 @@
     </script>
     @endif
     <!-- Start Main Top --> 
-        <div class="main-top">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        <div class="custom-select-box">
-                            <select id="basic" class="selectpicker show-tick form-control" data-placeholder="$ USD">
-                                <option>¥ JPY</option>
-                                <option>$ USD</option>
-                                <option>€ EUR</option>
-                            </select>
-                        </div>
-                        <div class="right-phone-box">
-                            <p>Call US :<a href="#">@foreach($settings as $data) {{$data->phone}} @endforeach</a></p>
-                        </div>
-                        <div class="our-link">
-                            <ul>
-                                <li><a href="#"><i class="fa fa-user s_color"></i> My Account</a></li>
-                                <li><a href="{{route('order.track')}}"><i class="fas fa-location-arrow"></i>Track Order</a></li>
-                                <li><a href="{{route('contact')}}"><i class="fas fa-headset"></i> Contact Us</a></li>
-                            </ul>
-                        </div>
+    <div class="main-top">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					<div class="custom-select-box">
+                        <select id="basic" class="selectpicker show-tick form-control" data-placeholder="$ USD">
+							<option>¥ JPY</option>
+							<option>$ USD</option>
+							<option>€ EUR</option>
+						</select>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="right-phone-box">
+                        <p>Call US :<a href="#">@foreach($settings as $data) {{$data->phone}} @endforeach</a></p>
+                    </div>
+                    <div class="our-link">
+                        <ul>
+                            @if (Auth::check())
+                                @if(Auth::user()->role=='user')
+                                    <li><a  href="{{route('user')}}"><i class="fa fa-user s_color"></i> My Account</a></li>
+                                @else
+                                    <li><a  href="{{route('admin')}}"><i class="fa fa-user s_color"></i> My Account</a></li>
+                                @endif
+                            @endif
+                            <li><a href="{{route('order.track')}}"><i class="fas fa-location-arrow"></i>Track Order</a></li>
+                            <li><a href="{{route('contact')}}"><i class="fas fa-headset"></i> Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    @if (!Auth::check())
                         <div class="login-box">
-                            <select id="basic" class="selectpicker show-tick form-control" data-placeholder="Sign In">
-                                <option>Register Here</option>
-                                <option>Sign In</option>
-                            </select>
+                            <button type="button" class="btn hvr-hover" data-toggle="modal" data-target="#loginModal">login</button>
                         </div>
-                        @php
-                            $section=DB::table('section')->where('status','active')->paginate(6);
-                        @endphp
-                        <div class="text-slid-box">
-                            <div id="offer-box" class="carouselTicker">
-                                <ul class="offer-box">
-                                    @if ($section)
-                                    @foreach ($section as $sections)
-                                    <li>
-                                        <i class="fab fa-opencart"></i> {{$sections->name}}
-                                    </li>
-                                    @endforeach                                    
-                                    @endif
-                                </ul>
-                            </div>
+                    @endif
+                    @php
+                        $section=DB::table('section')->where('status','active')->paginate(6);
+                    @endphp
+                    <div class="text-slid-box">
+                        <div id="offer-box" class="carouselTicker">
+                            <ul class="offer-box">
+                                @if ($section)
+                                @foreach ($section as $sections)
+                                <li>
+                                    <i class="fab fa-opencart"></i> {{$sections->name}}
+                                </li>
+                                @endforeach                                    
+                                @endif
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     <!-- End Main Top -->
 
     <!-- Start Main Top -->
@@ -144,7 +150,7 @@
                                         <li><a href="{{route('shipper.index')}}">Dashboard shipper</a></li>
                                     @endif
                                     @else
-                                        <li><a href="{{route('user.register')}}">login &amp; register</a></li>
+                                        <li><a href="{{route('register')}}">login &amp; register</a></li>
                                     @endauth
                                     <li><a href="{{route('wishlist')}}">Wishlist</a></li>
                                 </ul>
@@ -488,6 +494,65 @@
     <script src="{{asset('frontend/js/form-validator.min.js')}}"></script>
     <script src="{{asset('frontend/js/contact-form-script.js')}}"></script>
     <script src="{{asset('frontend/js/custom.js')}}"></script>
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-title text-center">
+                <h4>Login</h4>
+              </div>
+              <div class="d-flex flex-column text-center">
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+            
+                    <!-- Email Address -->
+                    <div class="form-group">
+                        <x-input-label for="email" :value="__('Email')" />
+                        <x-text-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    </div>
+            
+                    <!-- Password -->
+                    <div class="form-group">
+                        <x-input-label for="password" :value="__('Password')" />
+            
+                        <x-text-input id="password" class="form-control"
+                                        type="password"
+                                        name="password"
+                                        required autocomplete="current-password" />
+            
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    </div>
+                    <x-primary-button class="btn hvr-hover">
+                        {{ __('Log in') }}
+                    </x-primary-button>
+                </form>
+                
+                <div class="text-center text-muted delimiter">or use a social network</div>
+                <div class="d-flex justify-content-center social-buttons">
+                  <a  class="btn hvr-hover" href="{{ route('login.redirect', 'google') }}" data-toggle="tooltip" data-placement="top" title="google">
+                    <i class="fab fa-google"></i>
+                  </a>
+                  <a class="btn hvr-hover" href="{{ route('login.redirect', 'facebook') }}" data-toggle="tooltip" data-placement="top" title="Facebook">
+                    <i class="fab fa-facebook"></i>
+                  </a>
+                  <a class="btn hvr-hover" href="{{ route('login.redirect', 'twitter') }}" data-toggle="tooltip" data-placement="top" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </di>
+              </div>
+            </div>
+          </div>
+            <div class="modal-footer d-flex justify-content-center">
+              <div class="signup-section">Not a member yet? <a href="{{ route('register') }}" class="text-info"> Sign Up</a>.</div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

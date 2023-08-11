@@ -282,7 +282,7 @@ class OrderController extends Controller
         } else {
             // Jika pengguna belum login, Anda dapat memberikan pesan atau mengarahkan pengguna ke halaman login
             // Misalnya, menggunakan redirect ke halaman login
-            return redirect()->route('user.login')->with('error', 'Anda harus login untuk melacak pesanan.');
+            return redirect()->route('login')->with('error', 'Anda harus login untuk melacak pesanan.');
         }
     }
     

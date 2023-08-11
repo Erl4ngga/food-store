@@ -1,3 +1,26 @@
+@if(session('success'))
+        <div class="alert alert-success alert-dismissable fade show text-center" id="success-alert">
+            <button class="close" data-bs-dismiss="alert" aria-label="Close">×</button>
+            {{session('success')}}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('#success-alert').fadeOut('slow');
+            }, 3000); // waktu dalam milidetik
+        </script>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissable fade show text-center" id="error-alert">
+            <button class="close" data-bs-dismiss="alert" aria-label="Close">×</button>
+            {{session('error')}}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('#error-alert').fadeOut('slow');
+            }, 3000); // waktu dalam milidetik
+        </script>
+    @endif
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />

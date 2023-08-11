@@ -148,6 +148,12 @@ class DatabaseSeeder extends Seeder
         'value'=>'300',
         'status'=>'active'
     ]);
+    DB::table('plugin')->insert([
+        'name'=>"Payment Gateway",
+        'category'=>'Stripe,Paypal,Midtrans',
+        'status'=>'active',
+        'is_featured' => true,
+    ]);
     
     }
 }

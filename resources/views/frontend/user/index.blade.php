@@ -1,6 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<!-- Basic -->
+<!doctype html>
+<html class="no-js" lang="en">
+
+
 
 <head>
     @php
@@ -32,6 +33,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{asset('frontend/css/custom.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    
 </head>
 
 <body>
@@ -229,93 +232,214 @@
         </div>
     </div>
     <!-- End Top Search -->
-
-    <!-- Start All Title Box -->
-    <div class="all-title-box">
-        <div class="container">
+    <!-- Breadcrumb Area End Here -->
+    <!-- my account wrapper start -->
+    <div class="my-account-wrapper mt-no-text">
+        <div class="container container-default-2 custom-area">
             <div class="row">
-                <div class="col-lg-12">
-                    <h2>Services</h2>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Services</li>
-                    </ul>
+                <div class="col-lg-12 col-custom">
+                    <!-- My Account Page Start -->
+                    <div class="myaccount-page-wrapper">
+                        <!-- My Account Tab Menu Start -->
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 col-custom">
+                                <div class="myaccount-tab-menu nav" role="tablist">
+                                    <a href="#dashboad" class="active" data-bs-toggle="tab"><i class="fa fa-dashboard"></i>
+                                        Dashboard</a>
+                                    <a href="#orders" data-bs-toggle="tab"><i class="fa fa-cart-arrow-down"></i> Orders</a>
+                                    <a href="#download" data-bs-toggle="tab"><i class="fa fa-download"></i> Download</a>
+                                    <a href="#payment-method" data-bs-toggle="tab"><i class="fa fa-credit-card"> @foreach ($settings as $data)</i>{{$data->title}}</a>@endforeach
+                                    {{--<a href="#address-edit" data-bs-toggle="tab"><i class="fa fa-map-marker"></i> address</a>--}}
+                                    <a href="#account-info" data-bs-toggle="tab"><i class="fa fa-user"></i> Account Details</a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+            
+                                        <x-dropdown-link :href="route('logout')"
+                                                onclick="event.preventDefault();
+                                                            this.closest('form').submit();">
+                                            {{ __('Log Out') }}
+                                        </x-dropdown-link>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- My Account Tab Menu End -->
+
+                            <!-- My Account Tab Content Start -->
+                            <div class="col-lg-9 col-md-8 col-custom">
+                                <div class="tab-content" id="myaccountContent">
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade show active" id="dashboad" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>Dashboard</h3>
+                                            <div class="welcome">
+                                                <p>Hello, <strong>{{$user->name}}</strong> (If Not <strong>{{$user->name}} </strong><a href="login-register.html" class="logout"> Logout</a>)</p>
+                                            </div>
+                                            <p class="mb-0">From your account dashboard. you can easily check & view your recent orders, manage your shipping and billing addresses and edit your password and account details.</p>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="orders" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>Orders</h3>
+                                            <div class="myaccount-table table-responsive text-center">
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>Order Number</th>
+                                                            <th>Date</th>
+                                                            <th>Status</th>
+                                                            <th>Total</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if(count($orders)>0)
+                                                            @foreach ($orders as $order)
+                                                            <tr>
+                                                            <td>{{$order->order_number}}</td>
+                                                            <td> {{$order->created_at->format('d M, Y. D')}}</td>
+                                                            @if($order->status=='new')
+                                                                <td>{{$order->status}}</td>
+                                                            @elseif($order->status=='process')
+                                                                <td>{{$order->status}}</td>
+                                                            @elseif($order->status=='delivered')
+                                                                <td>{{$order->status}}</td>
+                                                            @else 
+                                                                <td>{{$order->status}}</td>
+                                                            @endif
+                                                            <td>{{$order->currency}}{{number_format($order->total_amount,2)}}</td>
+                                                            <td><a href="{{route('user.order.show',$order->id)}}" class="btn gomart-button secondary-btn theme-color  rounded-0">View</a></td>
+                                                            </tr>
+                                                            @endforeach
+                                                        @else
+                                                            <h6 class="text-center">Tidak ada pesanan yang ditemukan!!! Silahkan pesan beberapa produk</h6>
+                                                        @endif
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="download" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>Downloads</h3>
+                                            <div class="myaccount-table table-responsive text-center">
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>order number</th>
+                                                            <th>payment method</th>
+                                                            <th>Date</th>
+                                                            <th>Status</th>
+                                                            <th>Download</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($orders as $order)
+                                                            <tr>
+                                                                <td>{{$order->order_number}}</td>
+                                                                <td>{{$order->payment_method}}</td>
+                                                                <td>{{$order->created_at->format('d M, Y. D')}}</td>
+                                                                <td>{{$order->payment_status}}</td>
+                                                                <td><a href="{{route('order.pdf',$order->id)}}" class="btn gomart-button secondary-btn theme-color  rounded-0"><i class="fa fa-cloud-download mr-2"></i>Download File</a></td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="payment-method" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>E-Wallet</h3>
+                                            <p class="saved-message">{{number_format($user->money),2}}</p>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="address-edit" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>Billing Address</h3>
+                                            <address>
+                                                <p><strong>Alex Aya</strong></p>
+                                                <p>1234 Market ##, Suite 900 <br>
+                                            Lorem Ipsum, ## 12345</p>
+                                                <p>Mobile: (123) 123-456789</p>
+                                            </address>
+                                            <a href="#" class="btn gomart-button secondary-btn theme-color  rounded-0"><i class="fa fa-edit mr-2"></i>Edit Address</a>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="account-info" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            @foreach ($settings as $data)<h3>{{$data->title}} wallet</h3>@endforeach
+                                            <div class="account-details-form">
+                                                @if($plugins)
+                                                    @foreach ($plugins as $plugin)
+                                                <form method="POST" action="{{route('top-up')}}">
+                                                    @csrf
+                                                    <div class="row">
+                                                    </div>
+                                                    <div class="single-input-item mb-3">
+                                                        <label for="display-name" class="required mb-1">Top Up</label>
+                                                        <input name="quant[1]" step="1" type="number" id="display-name" placeholder="Top Up" />
+                                                    </div>
+                                                    @if (strpos($plugin->category, 'Paypal') !== false)                                                    
+                                                    <div class="single-input-item mb-3">
+                                                        <div class="checkout-form-list create-acc">
+                                                            <input name="payment_method" id="cod" type="radio"  value="paypal">
+                                                            <label for="cod">Paypal</label>
+                                                        </div>
+                                                    </div>
+                                                    @endif
+                                                    @if (strpos($plugin->category, 'Midtrans') !== false)
+                                                    <div class="single-input-item mb-3">
+                                                        <div class="checkout-form-list create-acc">
+                                                            <input name="payment_method" id="cbox" type="radio"  value="midtrans">
+                                                            <label for="cbox">midtrans</label>
+                                                        </div>
+                                                    </div>
+                                                    @endif
+                                                    @if (strpos($plugin->category, 'Stripe') !== false)
+                                                    <div class="single-input-item mb-3">
+                                                        <div class="checkout-form-list create-acc">
+                                                            <input name="payment_method" id="stripe" type="radio" value="stripe">
+                                                            <label for="stripe">Stripe</label>
+                                                        </div>
+                                                    </div>
+                                                    @endif                                                    
+                                                    <div class="single-input-item single-item-button">
+                                                        <button   class="btn flower-button secondary-btn theme-color  rounded-0">Save Changes</button>
+                                                    </div>                                                   
+                                                </form>
+                                                @endforeach 
+                                                @endif
+                                                <div class="payment">
+                                                    <a href="#"><img class="border" style="margin-top: 30px" src="/payment-icon.png" alt="Payment"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> <!-- Single Tab Content End -->
+                                </div>
+                            </div> <!-- My Account Tab Content End -->
+                        </div>
+                    </div> <!-- My Account Page End -->
                 </div>
             </div>
         </div>
     </div>
-    <!-- End All Title Box -->
-
-    <!-- Start Gallery  -->
-    <div class="products-box">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="title-all text-center">
-                        <h1>Our Gallery</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet lacus enim.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="special-menu text-center">
-                        <div class="button-group filter-button-group">
-                            @php
-                                $categories=DB::table('categories')->where('status','active')->paginate(20);
-                                // dd($categories);
-                            @endphp
-                            <button class="active" data-filter="*">All</button>
-                            @if($categories)
-                            @foreach($categories as $key=>$cat)
-                            <button data-filter=" .{{$cat->id}}">{{$cat->title}}</button>
-                            @endforeach
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row special-list">
-                @if ($galleryproduct)
-                @foreach ($galleryproduct as $key=>$product)
-                <div class="col-lg-3 col-md-6 special-grid {{$product->cat_id}}">
-                    <div class="products-single fix">
-                        <div class="box-img-hover">
-                            <div class="type-lb">
-                                @if($product->stock<=0)
-                                <p class="out-of-stock">Sale out</p>
-                            @elseif($product->condition=='new')
-                                <p class="new">New</p>
-                            @elseif($product->condition=='hot')
-                                <p class="hot">Hot</p>
-                            @else
-                                <p class="price-dec">{{$product->discount}}% Off</p>
-                            @endif
-                            </div>
-                            @php
-                                $photo=explode(',',$product->photo);
-                                // dd($photo);
-                            @endphp
-                            <img src="{{$photo[0]}}" class="img-fluid" alt="Image">
-                            <div class="mask-icon">
-                                <ul>
-                                    <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
-                                    <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                    <li><a src="{{$photo[0]}}" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
-                                </ul>
-                                <a class="cart" href="{{route('add-to-cart',$product->slug)}}">Add to Cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-                @endif
-            </div>
-        </div>
-    </div>
-    <!-- End Gallery  -->
-
+    <!-- my account wrapper end -->
     @php
          $instagramfeed=DB::table('instagram_feed')->where('status','active')->paginate(10);
     @endphp
@@ -459,6 +583,7 @@
         </div>
     </footer>
     <!-- End Footer  -->
+
     <!-- Start copyright  -->
     <div class="footer-copyright">
         @foreach ($settings as $data)
@@ -471,12 +596,15 @@
     </div>
     <!-- End copyright  -->
 
-
     <a href="#" id="back-to-top" title="Back to top" style="display: none;">&uarr;</a>
 
+    
+    <!-- ALL JS FILES -->
     <script src="{{asset('frontend/js/jquery-3.2.1.min.js')}}"></script>
     <script src="{{asset('frontend/js/popper.min.js')}}"></script>
     <script src="{{asset('frontend/js/bootstrap.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="..." defer></script>
+
     <!-- ALL PLUGINS -->
     <script src="{{asset('frontend/js/jquery.superslides.min.js')}}"></script>
     <script src="{{asset('frontend/js/bootstrap-select.js')}}"></script>
@@ -548,6 +676,11 @@
             </div>
         </div>
     </div>
+    
+    
+       
+
 </body>
+
 
 </html>

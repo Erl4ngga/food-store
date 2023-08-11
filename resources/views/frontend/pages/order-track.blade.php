@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<!-- Basic -->
+<!doctype html>
+<html class="no-js" lang="en">
+
 
 <head>
     @php
@@ -229,93 +229,90 @@
         </div>
     </div>
     <!-- End Top Search -->
-
-    <!-- Start All Title Box -->
-    <div class="all-title-box">
+    <section class="tracking_box_area section_gap py-5">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h2>Services</h2>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Services</li>
-                    </ul>
-                </div>
+            <div class="tracking_box_inner">
+                <p>To track your order please enter your Order ID in the box below and press the "Track" button. This was given
+                to you on your receipt and in the confirmation email you should have received.</p>
+                <form class="row tracking_form my-4" action="{{route('product.track.order')}}" method="post" novalidate="novalidate">
+                  @csrf
+                    <div class="col-md-8 form-group">
+                        <input type="text" class="form-control p-2"  name="order_number" placeholder="Tulis ID Order">
+                    </div>
+                    <div class="col-md-8 form-group">
+                        <button type="submit" value="submit" class="btn flower-button secondary-btn rounded-0" style="margin-top: 30px">Track Order</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
-    <!-- End All Title Box -->
-
-    <!-- Start Gallery  -->
-    <div class="products-box">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="title-all text-center">
-                        <h1>Our Gallery</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet lacus enim.</p>
-                    </div>
-                </div>
+    </section>
+    @if($orders)
+    <div class="container padding-bottom-3x mb-1">
+        <div class="card mb-3">
+            @foreach ($orders as $number_tracking)
+            <div class="p-4 text-center text-white text-lg bg-dark rounded-top">
+            <span class="text-uppercase">Tracking Order No = </span><span class="text-medium">{{$number_tracking->order_number}}</span>
             </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="special-menu text-center">
-                        <div class="button-group filter-button-group">
-                            @php
-                                $categories=DB::table('categories')->where('status','active')->paginate(20);
-                                // dd($categories);
-                            @endphp
-                            <button class="active" data-filter="*">All</button>
-                            @if($categories)
-                            @foreach($categories as $key=>$cat)
-                            <button data-filter=" .{{$cat->id}}">{{$cat->title}}</button>
-                            @endforeach
-                            @endif
-                        </div>
-                    </div>
-                </div>
+          <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between py-3 px-2 bg-secondary">
+            <div class="w-100 text-center py-1 px-2"><span class="text-medium">Shipped Via:</span> UPS Ground</div>
+            <div class="w-100 text-center py-1 px-2"><span class="text-medium">Status:</span>{{$number_tracking->payment_status}}</div>
+            <div class="w-100 text-center py-1 px-2"><span class="text-medium">Expected Date:</span> SEP 09, 2017</div>
+          </div>
+          <div class="card-body">
+            <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x"><?php
+                // Define the step titles and their corresponding status
+                $steps = [
+                    'Confirmed Order' => 'new',
+                    'process' => 'process',
+                    'delivered' => 'delivered',
+                    'Arrived' => 'arrived',
+                    'Cancel' => 'cancel',
+                ];
+                
+                // Function to check if a step should be marked as completed based on the data status
+                function isStepCompleted($stepStatus, $dataStatus) {
+                    return ($stepStatus === $dataStatus) || ($stepStatus === 'new' && $dataStatus !== 'new') || ($stepStatus === 'process' && ($dataStatus === 'process' || $dataStatus === 'delivered' || $dataStatus === 'arrived')) || ($stepStatus === 'delivered' && $dataStatus === 'arrived');
+                }
+                
+                // Set the dataStatus to 'arrived'
+                $dataStatus = $number_tracking->status;
+                
+                // Display the steps
+                foreach ($steps as $stepTitle => $stepStatus) {
+                    if (isStepCompleted($stepStatus, $dataStatus)) {
+                        echo '<div class="step completed">';
+                    } else {
+                        echo '<div class="step">';
+                    }
+                    echo '<div class="step-icon-wrap">';
+                    switch ($stepStatus) {
+                        case 'new':
+                            echo '<div class="step-icon"><i class="pe-7s-cart"></i></div>';
+                            break;
+                        case 'process':
+                            echo '<div class="step-icon"><i class="pe-7s-config"></i></div>';
+                            break;
+                        case 'delivered':
+                            echo '<div class="step-icon"><i class="pe-7s-car"></i></div>';
+                            break;
+                        case 'arrived':
+                            echo '<div class="step-icon"><i class="pe-7s-home"></i></div>';
+                            break;
+                        case 'cancel':
+                            echo '<div class="step-icon"><i class="pe-7s-close"></i></div>';
+                            break;
+                    }
+                    echo '</div>';
+                    echo '<h4 class="step-title">' . $stepTitle . '</h4>';
+                    echo '</div>';
+                }
+                ?>    
             </div>
-
-            <div class="row special-list">
-                @if ($galleryproduct)
-                @foreach ($galleryproduct as $key=>$product)
-                <div class="col-lg-3 col-md-6 special-grid {{$product->cat_id}}">
-                    <div class="products-single fix">
-                        <div class="box-img-hover">
-                            <div class="type-lb">
-                                @if($product->stock<=0)
-                                <p class="out-of-stock">Sale out</p>
-                            @elseif($product->condition=='new')
-                                <p class="new">New</p>
-                            @elseif($product->condition=='hot')
-                                <p class="hot">Hot</p>
-                            @else
-                                <p class="price-dec">{{$product->discount}}% Off</p>
-                            @endif
-                            </div>
-                            @php
-                                $photo=explode(',',$product->photo);
-                                // dd($photo);
-                            @endphp
-                            <img src="{{$photo[0]}}" class="img-fluid" alt="Image">
-                            <div class="mask-icon">
-                                <ul>
-                                    <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
-                                    <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                    <li><a src="{{$photo[0]}}" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
-                                </ul>
-                                <a class="cart" href="{{route('add-to-cart',$product->slug)}}">Add to Cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-                @endif
-            </div>
+          </div>
+          @endforeach
         </div>
     </div>
-    <!-- End Gallery  -->
-
+    @endif
     @php
          $instagramfeed=DB::table('instagram_feed')->where('status','active')->paginate(10);
     @endphp
@@ -459,6 +456,7 @@
         </div>
     </footer>
     <!-- End Footer  -->
+
     <!-- Start copyright  -->
     <div class="footer-copyright">
         @foreach ($settings as $data)
@@ -471,9 +469,10 @@
     </div>
     <!-- End copyright  -->
 
-
     <a href="#" id="back-to-top" title="Back to top" style="display: none;">&uarr;</a>
 
+    
+    <!-- ALL JS FILES -->
     <script src="{{asset('frontend/js/jquery-3.2.1.min.js')}}"></script>
     <script src="{{asset('frontend/js/popper.min.js')}}"></script>
     <script src="{{asset('frontend/js/bootstrap.min.js')}}"></script>
@@ -549,5 +548,7 @@
         </div>
     </div>
 </body>
+
+
 
 </html>
