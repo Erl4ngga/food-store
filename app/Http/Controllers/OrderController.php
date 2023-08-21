@@ -31,6 +31,8 @@ class OrderController extends Controller
             'post_code'=>'string|nullable',
             'email'=>'string|required',
             'notes'=>'string|nullable',
+            'country'=>'string|nullable',
+            'province'=>'string|nullable',
         ]);
 
         if(empty(Cart::where('user_id',auth()->user()->id)->where('order_id',null)->first())){

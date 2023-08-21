@@ -130,6 +130,10 @@
                         <td>Post Code</td>
                         <td> : {{$order->post_code}}</td>
                     </tr>
+                    <tr>
+                      <td>Province</td>
+                      <td> : {{$order->province}}</td>
+                  </tr>
                   @if ($order->notes)
                     <tr>
                       <td>notes</td>

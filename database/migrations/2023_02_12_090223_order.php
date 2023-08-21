@@ -32,6 +32,7 @@ class Order extends Migration
             $table->string('email');
             $table->string('phone');
             $table->string('country');
+            $table->string('province');
             $table->string('post_code')->nullable();
             $table->text('address1');
             $table->text('address2')->nullable();
