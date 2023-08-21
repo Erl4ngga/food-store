@@ -142,6 +142,18 @@ class DatabaseSeeder extends Seeder
         'title'=>"Footer3",
         'name'=>'Saturday: 10.00am to 08.00pm',
     ]);
+    DB::table('section3')->insert([
+        'title'=>"WE ARE TRUSTED",
+        'name'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ]);
+    DB::table('section3')->insert([
+        'title'=>"WE ARE PROFESSIONAL",
+        'name'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ]);
+    DB::table('section3')->insert([
+        'title'=>"WE ARE EXPERT",
+        'name'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ]);
     DB::table('coupons')->insert([
         'code'=>'baru2023',
         'type'=>'fixed',

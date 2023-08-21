@@ -271,24 +271,14 @@
                 @endforeach
             </div>
             <div class="row my-5">
+                @foreach ($Sections3 as $Section3)
                 <div class="col-sm-6 col-lg-4">
                     <div class="service-block-inner">
-                        <h3>We are Trusted</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+                        <h3>{{$Section3->title}}</h3>
+                        <p>{{$Section3->name}}</p>
                     </div>
                 </div>
-                <div class="col-sm-6 col-lg-4">
-                    <div class="service-block-inner">
-                        <h3>We are Professional</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-lg-4">
-                    <div class="service-block-inner">
-                        <h3>We are Expert</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-                    </div>
-                </div>
+                @endforeach
             </div>
             <div class="row my-4">
                 <div class="col-12">

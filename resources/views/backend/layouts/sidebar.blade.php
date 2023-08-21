@@ -115,7 +115,8 @@
                   <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Section Options:</h6>
                     <a class="collapse-item" href="{{route('section.index')}}">Section Title 1</a>
-                    <a class="collapse-item" href="{{route('section2.index')}}">Section Small Title 2</a>
+                    <a class="collapse-item" href="{{route('section2.index')}}">Section Title 2</a>
+                    <a class="collapse-item" href="{{route('section3.index')}}">Section Title 3</a>
                   </div>
                 </div>
             </li>

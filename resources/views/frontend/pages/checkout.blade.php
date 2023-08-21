@@ -397,10 +397,6 @@
                                         $total_amount=$total_amount-session('coupon')['value'];
                                     }
                                 @endphp
-                                <div class="d-flex">
-                                    <h4>Shipping Cost</h4>
-                                    <div class="ml-auto font-weight-bold"> Free </div>
-                                </div>
                                 <hr>
                                 @if(session('coupon'))
                                 <div class="d-flex gr-total order_subtotal" id="order_total_price">

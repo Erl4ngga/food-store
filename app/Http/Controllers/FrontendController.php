@@ -22,6 +22,7 @@ use Socialite;
 use Spatie\Newsletter\Facades\Newsletter;
 use Carbon\Carbon;
 use App\Models\Recruitment;
+use App\Models\Section3;
 
 class FrontendController extends Controller
 {
@@ -111,8 +112,9 @@ class FrontendController extends Controller
     public function aboutus()
     {
         $adminusers=User::where('role','admin')->orderBy('id','ASC')->paginate(4);
-        $carrers=Carrer::orderBy('id','DESC')->limit(2)->get();
-        return view('frontend.pages.about-us')->with('adminusers',$adminusers)->with('carrers',$carrers);
+        $carrers=Carrer::orderBy('id','DESC')->limit(1)->get();
+        $Sections3=Section3::orderBy('id','DESC')->limit(3)->get();
+        return view('frontend.pages.about-us')->with('adminusers',$adminusers)->with('Sections3',$Sections3)->with('carrers',$carrers);
     }
     public function contact()
     {

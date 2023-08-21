@@ -108,6 +108,7 @@ Route::group(['prefix'=>'/admin','middleware'=>['role:admin']],function(){
     Route::resource('custom', App\Http\Controllers\CustomController::class);
     Route::resource('section', App\Http\Controllers\SectionController::class);
     Route::resource('section2', App\Http\Controllers\Section2Controller::class);
+    Route::resource('section3', App\Http\Controllers\Section3Controller::class);
     Route::resource('emailsetting', App\Http\Controllers\EmailSettingController::class);
     //profile
     Route::get('/profile',[App\Http\Controllers\AdminController::class,'profile'])->name('admin-profile');
