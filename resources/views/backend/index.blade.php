@@ -150,7 +150,7 @@
     var data = google.visualization.arrayToDataTable(analytics);
     var options = {
         title: 'Last 24 Days registered user',
-        colors: ['#E72463'] // Mengatur warna menjadi #E72463
+        Color: "#b0b435", // Mengatur warna menjadi #E72463
     };
     var chart = new google.visualization.PieChart(document.getElementById('pie_chart'));
     chart.draw(data, options);
@@ -202,14 +202,14 @@
                     datasets: [{
                       label: "Earnings",
                       lineTension: 0.3,
-                      backgroundColor: "rgba(231,36,99)",
-                      borderColor: "rgba(231,36,99)",
+                      backgroundColor: "#b0b435",
+                      borderColor: "#b0b435",
                       pointRadius: 3,
-                      pointBackgroundColor: "rgba(231,36,99)",
-                      pointBorderColor: "rgba(231,36,99)",
+                      pointBackgroundColor: "#b0b435",
+                      pointBorderColor: "#b0b435",
                       pointHoverRadius: 3,
-                      pointHoverBackgroundColor: "rgba(231,36,99)",
-                      pointHoverBorderColor: "rgba(231,36,99)",
+                      pointHoverBackgroundColor: "#b0b435",
+                      pointHoverBorderColor: "#b0b435",
                       pointHitRadius: 10,
                       pointBorderWidth: 2,
                       data:data_values,// [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
@@ -333,14 +333,14 @@
                     datasets: [{
                       label: "Earnings",
                       lineTension: 0.3,
-                      backgroundColor: "rgba(231,36,99)",
-                      borderColor: "rgba(231,36,99)",
+                      backgroundColor: "#b0b435",
+                      borderColor: "#b0b435",
                       pointRadius: 3,
-                      pointBackgroundColor: "rgba(231,36,99)",
-                      pointBorderColor: "rgba(231,36,99)",
+                      pointBackgroundColor: "#b0b435",
+                      pointBorderColor: "#b0b435",
                       pointHoverRadius: 3,
-                      pointHoverBackgroundColor: "rgba(231,36,99)",
-                      pointHoverBorderColor: "rgba(231,36,99)",
+                      pointHoverBackgroundColor: "#b0b435",
+                      pointHoverBorderColor: "#b0b435",
                       pointHitRadius: 10,
                       pointBorderWidth: 2,
                       data:data_value,// [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],

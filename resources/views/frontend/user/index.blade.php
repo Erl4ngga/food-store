@@ -291,7 +291,6 @@
                                                             <th>Date</th>
                                                             <th>Status</th>
                                                             <th>Total</th>
-                                                            <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -310,7 +309,6 @@
                                                                 <td>{{$order->status}}</td>
                                                             @endif
                                                             <td>{{$order->currency}}{{number_format($order->total_amount,2)}}</td>
-                                                            <td><a href="{{route('user.order.show',$order->id)}}" class="btn gomart-button secondary-btn theme-color  rounded-0">View</a></td>
                                                             </tr>
                                                             @endforeach
                                                         @else

@@ -35,31 +35,30 @@
 </head>
 
 <body>
-
     @if(session('success'))
-    <div class="alert alert-success alert-dismissable fade show text-center" id="success-alert">
-        <button class="close" data-bs-dismiss="alert" aria-label="Close">×</button>
-        {{session('success')}}
-    </div>
-    <script>
-        setTimeout(function() {
-            $('#success-alert').fadeOut('slow');
-        }, 3000); // waktu dalam milidetik
-    </script>
+        <div class="alert alert-success alert-dismissable fade show text-center" id="success-alert">
+            <button class="close" data-bs-dismiss="alert" aria-label="Close">×</button>
+            {{session('success')}}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('#success-alert').fadeOut('slow');
+            }, 3000); // waktu dalam milidetik
+        </script>
     @endif
 
     @if(session('error'))
-    <div class="alert alert-danger alert-dismissable fade show text-center" id="error-alert">
-        <button class="close" data-bs-dismiss="alert" aria-label="Close">×</button>
-        {{session('error')}}
-    </div>
-    <script>
-        setTimeout(function() {
-            $('#error-alert').fadeOut('slow');
-        }, 3000); // waktu dalam milidetik
-    </script>
+        <div class="alert alert-danger alert-dismissable fade show text-center" id="error-alert">
+            <button class="close" data-bs-dismiss="alert" aria-label="Close">×</button>
+            {{session('error')}}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('#error-alert').fadeOut('slow');
+            }, 3000); // waktu dalam milidetik
+        </script>
     @endif
-        <!-- Start Main Top --> 
+    <!-- Start Main Top --> 
     <div class="main-top">
         <div class="container-fluid">
             <div class="row">
@@ -116,105 +115,106 @@
         </div>
     </div>
     <!-- End Main Top -->
-    
-        <!-- Start Main Top -->
-        <header class="main-header">
-            <!-- Start Navigation -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-default bootsnav">
-                <div class="container">
-                    <!-- Start Header Navigation -->
-                    <div class="navbar-header">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                        @foreach ($settings as $data) <a class="navbar-brand" href="index.html"><img src="{{$data->logo}}" class="logo" alt=""></a> @endforeach
-                    </div>
-                    <!-- End Header Navigation -->
-    
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="navbar-menu">
-                        <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
-                            <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{route('about.us')}}">About Us</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">SHOP &darr;</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="{{route('product-list')}}">Sidebar Shop</a></li>
-                                    <li><a href="{{route('cart')}}">Cart</a></li>
-                                    <li><a href="{{route('checkout')}}">Checkout</a></li>
-                                    @auth
-                                    @if(Auth::user()->role=='admin')
-                                        <li><a href="{{route('admin')}}">Dashboard admin</a></li>
-                                    @elseif(Auth::user()->role=='user')
-                                        <li><a href="{{route('user')}}">Dashboard user</a></li>
-                                    @else
-                                        <li><a href="{{route('shipper.index')}}">Dashboard shipper</a></li>
-                                    @endif
-                                    @else
-                                        <li><a href="{{route('register')}}">login &amp; register</a></li>
-                                    @endauth
-                                    <li><a href="{{route('wishlist')}}">Wishlist</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item"><a class="nav-link" href="{{route('gallery')}}">Gallery</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Contact Us</a></li>
-                        </ul>
-                    </div>
-                    <!-- /.navbar-collapse -->
-    
-                    <!-- Start Atribute Navigation -->
-                    <div class="attr-nav">
-                        <ul>
-                            <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
-                            <li class="side-menu">
-                                <a href="#">
-                                    <i class="fa fa-shopping-bag"></i>
-                                    <span class="cart-item_count">{{Helper::cartCount()}}</span>
-                                    <p>My Cart</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- End Atribute Navigation -->
+
+    <!-- Start Main Top -->
+    <header class="main-header">
+        <!-- Start Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-default bootsnav">
+            <div class="container">
+                <!-- Start Header Navigation -->
+                <div class="navbar-header">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-bars"></i>
+                </button>
+                    @foreach ($settings as $data) <a class="navbar-brand" href="index.html"><img src="{{$data->logo}}" class="logo" alt=""></a> @endforeach
                 </div>
-                <!-- Start Side Menu -->
-                @php 
-                    $total_prod=0;
-                    $total_amount=0;
-                @endphp
-                <div class="side">
-                    <a href="#" class="close-side"><i class="fa fa-times"></i></a>
-                    <li class="cart-box">
-                        @php
-                            $cartItems = Helper::getAllProductFromCart();
-                            $currency = '';
-                        @endphp
-                        <ul class="cart-list">
-                            @auth
-                            @foreach (Helper::getAllProductFromCart() as $item)
-                            <li>
-                                @php
-                                    $photo=explode(',',$item->product['photo']);
-                                    $currency = $item->product->currency;
-                                @endphp
-                                <a href="{{route('product-detail',$item->product['slug'])}}" class="photo"><img src="{{$photo[0]}}" alt="{{$photo[0]}}" class="cart-thumb" /></a>
-                                <h6><a href="{{route('product-detail',$item->product['slug'])}}">{{$item->product['title']}} </a></h6>
-                                <p>{{$item->quantity}}x - <span class="price">{{ $currency }} {{number_format($item->price,2)}}</span></p>
-                            </li>
-                            @endforeach
-                            <li class="total">
-                                <a href="{{route('cart')}}" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
-                                <span class="float-right">{{ $currency }} {{number_format(Helper::totalCartPrice(),2)}}</span>
-                            </li>
-                            @endauth
-                        </ul>
-                    </li>
+                <!-- End Header Navigation -->
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navbar-menu">
+                    <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
+                        <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{route('about.us')}}">About Us</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">SHOP &darr;</a>
+                            <ul class="dropdown-menu">
+								<li><a href="{{route('product-list')}}">Sidebar Shop</a></li>
+                                <li><a href="{{route('cart')}}">Cart</a></li>
+                                <li><a href="{{route('checkout')}}">Checkout</a></li>
+                                @auth
+                                @if(Auth::user()->role=='admin')
+                                    <li><a href="{{route('admin')}}">Dashboard admin</a></li>
+                                @elseif(Auth::user()->role=='user')
+                                    <li><a href="{{route('user')}}">Dashboard user</a></li>
+                                @else
+                                    <li><a href="{{route('shipper.index')}}">Dashboard shipper</a></li>
+                                @endif
+                                @else
+                                    <li><a href="{{route('register')}}">login &amp; register</a></li>
+                                @endauth
+                                <li><a href="{{route('wishlist')}}">Wishlist</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{{route('gallery')}}">Gallery</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Contact Us</a></li>
+                    </ul>
                 </div>
-                <!-- End Side Menu -->
-            </nav>
-            <!-- End Navigation -->
-        </header>
-        <!-- End Main Top -->  
+                <!-- /.navbar-collapse -->
+
+                <!-- Start Atribute Navigation -->
+                <div class="attr-nav">
+                    <ul>
+                        <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
+                        <li class="side-menu">
+							<a href="#">
+								<i class="fa fa-shopping-bag"></i>
+								<span class="cart-item_count">{{Helper::cartCount()}}</span>
+								<p>My Cart</p>
+							</a>
+						</li>
+                    </ul>
+                </div>
+                <!-- End Atribute Navigation -->
+            </div>
+            <!-- Start Side Menu -->
+            @php 
+                $total_prod=0;
+                $total_amount=0;
+            @endphp
+            <div class="side">
+                <a href="#" class="close-side"><i class="fa fa-times"></i></a>
+                <li class="cart-box">
+                    @php
+                        $cartItems = Helper::getAllProductFromCart();
+                        $currency = '';
+                    @endphp
+                    <ul class="cart-list">
+                        @auth
+                        @foreach (Helper::getAllProductFromCart() as $item)
+                        <li>
+                            @php
+                                $photo=explode(',',$item->product['photo']);
+                                $currency = $item->product->currency;
+                            @endphp
+                            <a href="{{route('product-detail',$item->product['slug'])}}" class="photo"><img src="{{$photo[0]}}" alt="{{$photo[0]}}" class="cart-thumb" /></a>
+                            <h6><a href="{{route('product-detail',$item->product['slug'])}}">{{$item->product['title']}} </a></h6>
+                            <p>{{$item->quantity}}x - <span class="price">{{ $currency }} {{number_format($item->price,2)}}</span></p>
+                        </li>
+                        @endforeach
+                        <li class="total">
+                            <a href="{{route('cart')}}" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
+                            <span class="float-right">{{ $currency }} {{number_format(Helper::totalCartPrice(),2)}}</span>
+                        </li>
+                        @endauth
+                    </ul>
+                </li>
+            </div>
+            <!-- End Side Menu -->
+        </nav>
+        <!-- End Navigation -->
+    </header>
+    <!-- End Main Top -->
+
     <!-- Start Top Search -->
     <div class="top-search">
         <div class="container">
@@ -229,15 +229,16 @@
         </div>
     </div>
     <!-- End Top Search -->
+
     <!-- Start All Title Box -->
     <div class="all-title-box">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>Cart</h2>
+                    <h2>Wishlist</h2>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item active">Cart</li>
+                        <li class="breadcrumb-item active">Wishlist</li>
                     </ul>
                 </div>
             </div>
@@ -245,11 +246,9 @@
     </div>
     <!-- End All Title Box -->
 
-    <!-- Start Cart  -->
-    <div class="cart-box-main">
+    <!-- Start Wishlist  -->
+    <div class="wishlist-box-main">
         <div class="container">
-        <form action="{{route('cart.update')}}" method="post">
-            @csrf
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-main table-responsive">
@@ -258,120 +257,62 @@
                                 <tr>
                                     <th>Images</th>
                                     <th>Product Name</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
+                                    <th>Unit Price </th>
+                                    <th>Stock</th>
+                                    <th>Add Item</th>
                                     <th>Remove</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if(Helper::getAllProductFromCart())
-									@foreach(Helper::getAllProductFromCart() as $key=>$cart)
+                                @if(Helper::getAllProductFromWishlist())
+								@foreach(Helper::getAllProductFromWishlist() as $key=>$wishlist)
                                 <tr>
-                                    @php
-										$photo=explode(',',$cart->product['photo']);
+                                    @php 
+										$photo=explode(',',$wishlist->product['photo']);
 									@endphp
                                     <td class="thumbnail-img">
-                                        <a ref="{{route('product-detail',$cart->product['slug'])}}">
+                                        <a href="#">
 									<img class="img-fluid" src="{{$photo[0]}}" alt="{{$photo[0]}}" />
 								</a>
                                     </td>
                                     <td class="name-pr">
-                                        <a ref="{{route('product-detail',$cart->product['slug'])}}">
-                                            {{$cart->product['title']}}
+                                        <a href="#">
+                                    {{$wishlist->product['title']}}
 								</a>
                                     </td>
                                     <td class="price-pr">
-                                        <p>{{$cart->product['currency']}}{{number_format($cart['price'],2)}}</p>
+                                        <p>{{$wishlist->product['currency']}} {{number_format($wishlist['amount'],2)}}</p>
                                     </td>
-                                    <td class="quantity-box"><input type="number" size="4" name="quant[{{$key}}]" value="{{$cart->quantity}}" min="0" step="1" class="c-input-text qty text">
-                                        <input type="hidden" name="qty_id[]" value="{{$cart->id}}">
-                                    </td>
-                                    <td class="total-pr">
-                                        <p>{{$cart->product['currency']}}{{number_format($cart['price'],2)}}</p>
+                                    <td class="quantity-box">In Stock</td>
+                                    <td class="add-pr">
+                                        <a class="btn hvr-hover" href="{{route('add-to-cart',$wishlist->product['slug'])}}">Add to Cart</a>
                                     </td>
                                     <td class="remove-pr">
-                                        <a href="{{route('cart-delete',$cart->id)}}">
+                                        <a href="{{route('wishlist-delete',$wishlist->id)}}">
 									<i class="fas fa-times"></i>
 								</a>
                                     </td>
                                 </tr>
                                 @endforeach
-                                @else
-                            <tr>
-                            <td class="text-center">
-                            Tidak ada cart yang tersedia. <a href="" style="color:blue;">Continue shopping</a>
-
-                            </td>
-                            </tr>
-                            @endif
+                                @else 
+                                    <tr>
+                                        <td class="text-center">
+                                            There are no any wishlist available. <a href="{{route('product-grids')}}" style="color:blue;">Continue shopping</a>
+    
+                                        </td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
-            <div class="row my-5">
-                <div class="col-lg-6 col-sm-6">
-                    <div class="update-box">
-                        <input value="Update Cart" type="submit">
-                    </div>
-                </div>
-        </form>
-                <div class="col-lg-6 col-sm-6">
-                    <form class="coupon-box" form action="{{route('coupon-store')}}" method="post">
-                        @csrf
-                        <div class="input-group input-group-sm">
-                            <input name="code" class="form-control" placeholder="Enter your coupon code" aria-label="Coupon code" type="text">
-                            <div class="input-group-append">
-                                <button class="btn btn-theme" type="submit">Apply Coupon</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="row my-5">
-                <div class="col-lg-8 col-sm-12"></div>
-                <div class="col-lg-4 col-sm-12">
-                    <div class="order-box">
-                        <h3>Order summary</h3>
-                        <div class="d-flex">
-                            <h4>Sub Total</h4>
-                            <div class="ml-auto font-weight-bold"> {{number_format(Helper::totalCartPrice(),2)}} </div>
-                        </div>
-                        @if(session()->has('coupon'))
-                        <div class="d-flex">
-                            <h4>Discount</h4>
-                            <div class="ml-auto font-weight-bold"> {{number_format(Session::get('coupon')['value'],2)}}</div>
-                        </div>
-                        @endif
-                        @php
-                            $total_amount=Helper::totalCartPrice();
-                            if(session()->has('coupon')){
-                                $total_amount=$total_amount-Session::get('coupon')['value'];
-                            }
-                        @endphp
-
-                        <hr>
-                        <div class="d-flex gr-total">
-                            <h5>Grand Total</h5>
-                            @if(session()->has('coupon'))
-                                <div class="ml-auto h5"> {{number_format($total_amount,2)}}</div>
-                            @else
-                                <div class="ml-auto h5"> {{number_format($total_amount,2)}} </div>
-                            @endif
-                        </div>
-                        <hr> </div>
-                </div>
-                <div class="col-12 d-flex shopping-box"><a href="{{route('checkout')}}" class="ml-auto btn hvr-hover">Checkout</a> </div>
-            </div>
-
         </div>
     </div>
-        <!-- End Cart -->
-        {{-- end cart --}}
+    <!-- End Wishlist -->
+
     @php
-        $instagramfeed=DB::table('instagram_feed')->where('status','active')->paginate(10);
+         $instagramfeed=DB::table('instagram_feed')->where('status','active')->paginate(10);
     @endphp
     <!-- Start Instagram Feed  -->
     @if($instagramfeed)
@@ -391,10 +332,12 @@
     </div>
     @endif
     <!-- End Instagram Feed  -->
+
+
     <!-- Start Footer  -->
-        @php
+    @php
         $section2=DB::table('section2')->paginate(3);
-        @endphp
+    @endphp
     <footer>
         <div class="footer-main">
             <div class="container">
@@ -433,37 +376,37 @@
 							<h3>Social Media</h3>
 							<ul>
                                 @foreach ($settings as $data)
-                                <li>
-                                    @if ($data->facebook)
-                                    <a href="{{$data->facebook}}"><i class="fab fa-facebook" aria-hidden="true"></i>
-                                    </a>
-                                    @endif
-                                </li>
-                                <li>
-                                    @if ($data->twitter)
-                                    <a href="{{$data->twitter}}"><i class="fab fa-twitter" aria-hidden="true"></i>
-                                    </a>
-                                    @endif
-                                </li>
-                                <li>
-                                    @if ($data->linkedin)
-                                    <a href="{{$data->linkedin}}"><i class="fab fa-linkedin" aria-hidden="true"></i>
-                                    </a>
-                                    @endif
-                                </li>
-                                <li>
-                                    @if ($data->youtube)
-                                    <a href="{{$data->youtube}}"><i class="fab fa-youtube" aria-hidden="true"></i>
-                                    </a>
-                                    @endif
-                                </li>
-                                <li>
-                                    @if ($data->instagram)
-                                    <a href="{{$data->instagram}}"><i class="fab fa-instagram" aria-hidden="true"></i>
-                                    </a>
-                                    @endif
-                                </li>
-                            @endforeach
+                                    <li>
+                                        @if ($data->facebook)
+                                        <a href="{{$data->facebook}}"><i class="fab fa-facebook" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->twitter)
+                                        <a href="{{$data->twitter}}"><i class="fab fa-twitter" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->linkedin)
+                                        <a href="{{$data->linkedin}}"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->youtube)
+                                        <a href="{{$data->youtube}}"><i class="fab fa-youtube" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->instagram)
+                                        <a href="{{$data->instagram}}"><i class="fab fa-instagram" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                @endforeach
                             </ul>
 						</div>
 					</div>
@@ -498,7 +441,7 @@
                                     <p><i class="fas fa-map-marker-alt"></i>@foreach($settings as $data) {{$data->address}} @endforeach</p>
                                 </li>
                                 <li>
-                                    <p><i class="fas fa-phone-square"></i>Phone: <a href="tel:+1-888705770">@foreach($settings as $data) {{$data->phone}} @endforeach</a></p>
+                                    <p><i class="fas fa-phone-square"></i>Phone: <a href="">@foreach($settings as $data) {{$data->phone}} @endforeach</a></p>
                                 </li>
                                 <li>
                                     <p><i class="fas fa-envelope"></i>Email: <a href="">@foreach($settings as $data) {{$data->email}} @endforeach</a></p>
@@ -511,6 +454,7 @@
         </div>
     </footer>
     <!-- End Footer  -->
+
     <!-- Start copyright  -->
     <div class="footer-copyright">
         @foreach ($settings as $data)
@@ -525,7 +469,7 @@
 
     <a href="#" id="back-to-top" title="Back to top" style="display: none;">&uarr;</a>
 
-
+    
     <!-- ALL JS FILES -->
     <script src="{{asset('frontend/js/jquery-3.2.1.min.js')}}"></script>
     <script src="{{asset('frontend/js/popper.min.js')}}"></script>

@@ -3,6 +3,10 @@
 <!-- Basic -->
 
 <head>
+    @php
+        $settings=DB::table('settings')->get();
+        $emailsettings=DB::table('email_setting')->get();
+    @endphp
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -10,33 +14,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Site Metas -->
-    <title>ThewayShop - Ecommerce Bootstrap 4 HTML Template</title>
+    @foreach ($settings as $data)
+    <title>{{$data->title}}</title>@endforeach
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <!-- Site Icons -->
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{asset('frontend/css/bootstrap.min.css')}}">
     <!-- Site CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{{asset('frontend/css/style.css')}}">
     <!-- Responsive CSS -->
-    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="{{asset('frontend/css/responsive.css')}}">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/custom.css">
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
+    <link rel="stylesheet" href="{{asset('frontend/css/custom.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
-    <!-- Start Main Top -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissable fade show text-center" id="success-alert">
+            <button class="close" data-bs-dismiss="alert" aria-label="Close">×</button>
+            {{session('success')}}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('#success-alert').fadeOut('slow');
+            }, 3000); // waktu dalam milidetik
+        </script>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissable fade show text-center" id="error-alert">
+            <button class="close" data-bs-dismiss="alert" aria-label="Close">×</button>
+            {{session('error')}}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('#error-alert').fadeOut('slow');
+            }, 3000); // waktu dalam milidetik
+        </script>
+    @endif
+    <!-- Start Main Top --> 
     <div class="main-top">
         <div class="container-fluid">
             <div class="row">
@@ -49,50 +71,42 @@
 						</select>
                     </div>
                     <div class="right-phone-box">
-                        <p>Call US :- <a href="#"> +11 900 800 100</a></p>
+                        <p>Call US :<a href="#">@foreach($settings as $data) {{$data->phone}} @endforeach</a></p>
                     </div>
                     <div class="our-link">
                         <ul>
-                            <li><a href="#"><i class="fa fa-user s_color"></i> My Account</a></li>
-                            <li><a href="#"><i class="fas fa-location-arrow"></i> Our location</a></li>
-                            <li><a href="#"><i class="fas fa-headset"></i> Contact Us</a></li>
+                            @if (Auth::check())
+                                @if(Auth::user()->role=='user')
+                                    <li><a  href="{{route('user')}}"><i class="fa fa-user s_color"></i> My Account</a></li>
+                                @else
+                                    <li><a  href="{{route('admin')}}"><i class="fa fa-user s_color"></i> My Account</a></li>
+                                @endif
+                            @endif
+                            <li><a href="{{route('order.track')}}"><i class="fas fa-location-arrow"></i>Track Order</a></li>
+                            <li><a href="{{route('contact')}}"><i class="fas fa-headset"></i> Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
+                
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-					<div class="login-box">
-						<select id="basic" class="selectpicker show-tick form-control" data-placeholder="Sign In">
-							<option>Register Here</option>
-							<option>Sign In</option>
-						</select>
-					</div>
+                    @if (!Auth::check())
+                        <div class="login-box">
+                            <button type="button" class="btn hvr-hover" data-toggle="modal" data-target="#loginModal">login</button>
+                        </div>
+                    @endif
+                    @php
+                        $section=DB::table('section')->where('status','active')->paginate(6);
+                    @endphp
                     <div class="text-slid-box">
                         <div id="offer-box" class="carouselTicker">
                             <ul class="offer-box">
+                                @if ($section)
+                                @foreach ($section as $sections)
                                 <li>
-                                    <i class="fab fa-opencart"></i> 20% off Entire Purchase Promo code: offT80
+                                    <i class="fab fa-opencart"></i> {{$sections->name}}
                                 </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> 50% - 80% off on Vegetables
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> Off 10%! Shop Vegetables
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> Off 50%! Shop Now
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> Off 10%! Shop Vegetables
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> 50% - 80% off on Vegetables
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> 20% off Entire Purchase Promo code: offT30
-                                </li>
-                                <li>
-                                    <i class="fab fa-opencart"></i> Off 50%! Shop Now 
-                                </li>
+                                @endforeach                                    
+                                @endif
                             </ul>
                         </div>
                     </div>
@@ -112,28 +126,37 @@
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-bars"></i>
                 </button>
-                    <a class="navbar-brand" href="index.html"><img src="images/logo.png" class="logo" alt=""></a>
+                    @foreach ($settings as $data) <a class="navbar-brand" href="index.html"><img src="{{$data->logo}}" class="logo" alt=""></a> @endforeach
                 </div>
                 <!-- End Header Navigation -->
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbar-menu">
                     <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
-                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
-                        <li class="dropdown active">
-                            <a href="#" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">SHOP</a>
+                        <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{route('about.us')}}">About Us</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">SHOP &darr;</a>
                             <ul class="dropdown-menu">
-								<li><a href="shop.html">Sidebar Shop</a></li>
-								<li><a href="shop-detail.html">Shop Detail</a></li>
-                                <li><a href="cart.html">Cart</a></li>
-                                <li><a href="checkout.html">Checkout</a></li>
-                                <li><a href="my-account.html">My Account</a></li>
-                                <li><a href="wishlist.html">Wishlist</a></li>
+								<li><a href="{{route('product-list')}}">Sidebar Shop</a></li>
+                                <li><a href="{{route('cart')}}">Cart</a></li>
+                                <li><a href="{{route('checkout')}}">Checkout</a></li>
+                                @auth
+                                @if(Auth::user()->role=='admin')
+                                    <li><a href="{{route('admin')}}">Dashboard admin</a></li>
+                                @elseif(Auth::user()->role=='user')
+                                    <li><a href="{{route('user')}}">Dashboard user</a></li>
+                                @else
+                                    <li><a href="{{route('shipper.index')}}">Dashboard shipper</a></li>
+                                @endif
+                                @else
+                                    <li><a href="{{route('register')}}">login &amp; register</a></li>
+                                @endauth
+                                <li><a href="{{route('wishlist')}}">Wishlist</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contact-us.html">Contact Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{route('gallery')}}">Gallery</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Contact Us</a></li>
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->
@@ -142,39 +165,47 @@
                 <div class="attr-nav">
                     <ul>
                         <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
-                        <li class="side-menu"><a href="#">
-						<i class="fa fa-shopping-bag"></i>
-                            <span class="badge">3</span>
-							<p>My Cart</p>
-					</a></li>
+                        <li class="side-menu">
+							<a href="#">
+								<i class="fa fa-shopping-bag"></i>
+								<span class="cart-item_count">{{Helper::cartCount()}}</span>
+								<p>My Cart</p>
+							</a>
+						</li>
                     </ul>
                 </div>
                 <!-- End Atribute Navigation -->
             </div>
             <!-- Start Side Menu -->
+            @php 
+                $total_prod=0;
+                $total_amount=0;
+            @endphp
             <div class="side">
                 <a href="#" class="close-side"><i class="fa fa-times"></i></a>
                 <li class="cart-box">
+                    @php
+                        $cartItems = Helper::getAllProductFromCart();
+                        $currency = '';
+                    @endphp
                     <ul class="cart-list">
+                        @auth
+                        @foreach (Helper::getAllProductFromCart() as $item)
                         <li>
-                            <a href="#" class="photo"><img src="images/img-pro-01.jpg" class="cart-thumb" alt="" /></a>
-                            <h6><a href="#">Delica omtantur </a></h6>
-                            <p>1x - <span class="price">$80.00</span></p>
+                            @php
+                                $photo=explode(',',$item->product['photo']);
+                                $currency = $item->product->currency;
+                            @endphp
+                            <a href="{{route('product-detail',$item->product['slug'])}}" class="photo"><img src="{{$photo[0]}}" alt="{{$photo[0]}}" class="cart-thumb" /></a>
+                            <h6><a href="{{route('product-detail',$item->product['slug'])}}">{{$item->product['title']}} </a></h6>
+                            <p>{{$item->quantity}}x - <span class="price">{{ $currency }} {{number_format($item->price,2)}}</span></p>
                         </li>
-                        <li>
-                            <a href="#" class="photo"><img src="images/img-pro-02.jpg" class="cart-thumb" alt="" /></a>
-                            <h6><a href="#">Omnes ocurreret</a></h6>
-                            <p>1x - <span class="price">$60.00</span></p>
-                        </li>
-                        <li>
-                            <a href="#" class="photo"><img src="images/img-pro-03.jpg" class="cart-thumb" alt="" /></a>
-                            <h6><a href="#">Agam facilisis</a></h6>
-                            <p>1x - <span class="price">$40.00</span></p>
-                        </li>
+                        @endforeach
                         <li class="total">
-                            <a href="#" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
-                            <span class="float-right"><strong>Total</strong>: $180.00</span>
+                            <a href="{{route('cart')}}" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
+                            <span class="float-right">{{ $currency }} {{number_format(Helper::totalCartPrice(),2)}}</span>
                         </li>
+                        @endauth
                     </ul>
                 </li>
             </div>
@@ -187,11 +218,14 @@
     <!-- Start Top Search -->
     <div class="top-search">
         <div class="container">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                <input type="text" class="form-control" placeholder="Search">
-                <span class="input-group-addon close-search"><i class="fa fa-times"></i></span>
-            </div>
+            <form method="POST" action="{{route('product.search')}}">
+                @csrf
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input type="text" name="search" class="form-control" placeholder="Search">
+                    <span class="input-group-addon close-search"><i class="fa fa-times"></i></span>
+                </div>
+            </form> 
         </div>
     </div>
     <!-- End Top Search -->
@@ -219,68 +253,36 @@
                 <div class="col-xl-5 col-lg-5 col-md-6">
                     <div id="carousel-example-1" class="single-product-slider carousel slide" data-ride="carousel">
                         <div class="carousel-inner" role="listbox">
-                            <div class="carousel-item active"> <img class="d-block w-100" src="images/big-img-01.jpg" alt="First slide"> </div>
-                            <div class="carousel-item"> <img class="d-block w-100" src="images/big-img-02.jpg" alt="Second slide"> </div>
-                            <div class="carousel-item"> <img class="d-block w-100" src="images/big-img-03.jpg" alt="Third slide"> </div>
+                            <div class="carousel-item active"> <img class="d-block w-100" src="{{$product_detail->photo}}" alt="First slide"> </div>
                         </div>
-                        <a class="carousel-control-prev" href="#carousel-example-1" role="button" data-slide="prev"> 
-						<i class="fa fa-angle-left" aria-hidden="true"></i>
-						<span class="sr-only">Previous</span> 
-					</a>
-                        <a class="carousel-control-next" href="#carousel-example-1" role="button" data-slide="next"> 
-						<i class="fa fa-angle-right" aria-hidden="true"></i> 
-						<span class="sr-only">Next</span> 
-					</a>
-                        <ol class="carousel-indicators">
-                            <li data-target="#carousel-example-1" data-slide-to="0" class="active">
-                                <img class="d-block w-100 img-fluid" src="images/smp-img-01.jpg" alt="" />
-                            </li>
-                            <li data-target="#carousel-example-1" data-slide-to="1">
-                                <img class="d-block w-100 img-fluid" src="images/smp-img-02.jpg" alt="" />
-                            </li>
-                            <li data-target="#carousel-example-1" data-slide-to="2">
-                                <img class="d-block w-100 img-fluid" src="images/smp-img-03.jpg" alt="" />
-                            </li>
-                        </ol>
+                        
                     </div>
                 </div>
                 <div class="col-xl-7 col-lg-7 col-md-6">
                     <div class="single-product-details">
-                        <h2>Fachion Lorem ipsum dolor sit amet</h2>
+                        <h2>{{$product_detail->title}}</h2>
                         <h5> <del>$ 60.00</del> $40.79</h5>
-                        <p class="available-stock"><span> More than 20 available / <a href="#">8 sold </a></span><p>
+                        <p class="available-stock"><span>  {{$product_detail->stock}} available / <a >{{ $product_detail->sold }} sold </a></span><p>
 						<h4>Short Description:</h4>
-						<p>Nam sagittis a augue eget scelerisque. Nullam lacinia consectetur sagittis. Nam sed neque id eros fermentum dignissim quis at tortor. Nullam ultricies urna quis sem sagittis pharetra. Nam erat turpis, cursus in ipsum at,
-							tempor imperdiet metus. In interdum id nulla tristique accumsan. Ut semper in quam nec pretium. Donec egestas finibus suscipit. Curabitur tincidunt convallis arcu. </p>
+						<p>{!! html_entity_decode($product_detail->summary) !!} </p>
+                        <form action="{{route('single-add-to-cart')}}" method="post">
+                            @csrf
 						<ul>
 							<li>
 								<div class="form-group quantity-box">
 									<label class="control-label">Quantity</label>
-									<input class="form-control" value="0" min="0" max="20" type="number">
+									<input name="quant[1]" class="form-control" value="0" min="0" max="20" type="number">
 								</div>
 							</li>
 						</ul>
+                        <input type="hidden" name="slug" value="{{$product_detail->slug}}">
 
 						<div class="price-box-bar">
 							<div class="cart-and-bay-btn">
-								<a class="btn hvr-hover" data-fancybox-close="" href="#">Buy New</a>
-								<a class="btn hvr-hover" data-fancybox-close="" href="#">Add to cart</a>
+								<button type="submit" class="btn hvr-hover" >Add to cart</button>
 							</div>
 						</div>
-
-						<div class="add-to-btn">
-							<div class="add-comp">
-								<a class="btn hvr-hover" href="#"><i class="fas fa-heart"></i> Add to wishlist</a>
-								<a class="btn hvr-hover" href="#"><i class="fas fa-sync-alt"></i> Add to Compare</a>
-							</div>
-							<div class="share-bar">
-								<a class="btn hvr-hover" href="#"><i class="fab fa-facebook" aria-hidden="true"></i></a>
-								<a class="btn hvr-hover" href="#"><i class="fab fa-google-plus" aria-hidden="true"></i></a>
-								<a class="btn hvr-hover" href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a>
-								<a class="btn hvr-hover" href="#"><i class="fab fa-pinterest-p" aria-hidden="true"></i></a>
-								<a class="btn hvr-hover" href="#"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
-							</div>
-						</div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -291,6 +293,7 @@
 						<h2>Product Reviews</h2>
 					</div>
 					<div class="card-body">
+                        @foreach ($product_detail['getReview'] as $data)
 						<div class="media mb-3">
 							<div class="mr-2"> 
 								<img class="rounded-circle border p-1" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2264%22%20height%3D%2264%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_160c142c97c%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_160c142c97c%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2213.5546875%22%20y%3D%2236.5%22%3E64x64%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Generic placeholder image">
@@ -300,27 +303,7 @@
 								<small class="text-muted">Posted by Anonymous on 3/1/18</small>
 							</div>
 						</div>
-						<hr>
-						<div class="media mb-3">
-							<div class="mr-2"> 
-								<img class="rounded-circle border p-1" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2264%22%20height%3D%2264%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_160c142c97c%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_160c142c97c%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2213.5546875%22%20y%3D%2236.5%22%3E64x64%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Generic placeholder image">
-							</div>
-							<div class="media-body">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-								<small class="text-muted">Posted by Anonymous on 3/1/18</small>
-							</div>
-						</div>
-						<hr>
-						<div class="media mb-3">
-							<div class="mr-2"> 
-								<img class="rounded-circle border p-1" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2264%22%20height%3D%2264%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_160c142c97c%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_160c142c97c%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2213.5546875%22%20y%3D%2236.5%22%3E64x64%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Generic placeholder image">
-							</div>
-							<div class="media-body">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-								<small class="text-muted">Posted by Anonymous on 3/1/18</small>
-							</div>
-						</div>
-						<hr>
+                        @endforeach
 						<a href="#" class="btn hvr-hover">Leave a Review</a>
 					</div>
 				  </div>
@@ -493,95 +476,33 @@
     </div>
     <!-- End Cart -->
 
+    @php
+         $instagramfeed=DB::table('instagram_feed')->where('status','active')->paginate(10);
+    @endphp
     <!-- Start Instagram Feed  -->
+    @if($instagramfeed)
     <div class="instagram-box">
         <div class="main-instagram owl-carousel owl-theme">
+            @foreach ($instagramfeed as $instagramcustom)
             <div class="item">
                 <div class="ins-inner-box">
-                    <img src="images/instagram-img-01.jpg" alt="" />
+                    <img src="{{$instagramcustom->photo}}" alt="" />
                     <div class="hov-in">
                         <a href="#"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-02.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-03.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-04.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-05.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-06.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-07.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-08.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-09.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="ins-inner-box">
-                    <img src="images/instagram-img-05.jpg" alt="" />
-                    <div class="hov-in">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
+    @endif
     <!-- End Instagram Feed  -->
 
 
     <!-- Start Footer  -->
+    @php
+        $section2=DB::table('section2')->paginate(3);
+    @endphp
     <footer>
         <div class="footer-main">
             <div class="container">
@@ -589,35 +510,68 @@
 					<div class="col-lg-4 col-md-12 col-sm-12">
 						<div class="footer-top-box">
 							<h3>Business Time</h3>
+                            @if ($section2)
 							<ul class="list-time">
-								<li>Monday - Friday: 08.00am to 05.00pm</li> <li>Saturday: 10.00am to 08.00pm</li> <li>Sunday: <span>Closed</span></li>
+                                @foreach ($section2 as $sections2)
+								<li>{{$sections2->name}}</li>
+                                @endforeach
 							</ul>
+                            @endif
 						</div>
 					</div>
+                    @foreach ($emailsettings as $emailsetting)
+                    @if ($emailsetting->status == 'active')
 					<div class="col-lg-4 col-md-12 col-sm-12">
 						<div class="footer-top-box">
 							<h3>Newsletter</h3>
-							<form class="newsletter-box">
+							<form action="{{route('subscribe')}}" method="post" class="newsletter-box">
+                                @csrf
 								<div class="form-group">
-									<input class="" type="email" name="Email" placeholder="Email Address*" />
+									<input class="" type="email" name="email" placeholder="Email Address*" />
 									<i class="fa fa-envelope"></i>
 								</div>
 								<button class="btn hvr-hover" type="submit">Submit</button>
 							</form>
 						</div>
 					</div>
-					<div class="col-lg-4 col-md-12 col-sm-12">
+                    @endif
+                    @endforeach
+					<div class="col-lg-4 col-md-12 col-sm-12"> 
 						<div class="footer-top-box">
 							<h3>Social Media</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 							<ul>
-                                <li><a href="#"><i class="fab fa-facebook" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-google-plus" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-pinterest-p" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-whatsapp" aria-hidden="true"></i></a></li>
+                                @foreach ($settings as $data)
+                                    <li>
+                                        @if ($data->facebook)
+                                        <a href="{{$data->facebook}}"><i class="fab fa-facebook" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->twitter)
+                                        <a href="{{$data->twitter}}"><i class="fab fa-twitter" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->linkedin)
+                                        <a href="{{$data->linkedin}}"><i class="fab fa-linkedin" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->youtube)
+                                        <a href="{{$data->youtube}}"><i class="fab fa-youtube" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if ($data->instagram)
+                                        <a href="{{$data->instagram}}"><i class="fab fa-instagram" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                    </li>
+                                @endforeach
                             </ul>
 						</div>
 					</div>
@@ -626,21 +580,21 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-12 col-sm-12">
                         <div class="footer-widget">
-                            <h4>About Freshshop</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p> 
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p> 							
+                            @foreach ($settings as $data)
+                            <h4>About {{$data->title}}</h4>@endforeach
+                            <p>@foreach($settings as $data) {{$data->short_des}} @endforeach</p> 							
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12 col-sm-12">
                         <div class="footer-link">
                             <h4>Information</h4>
                             <ul>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Customer Service</a></li>
-                                <li><a href="#">Our Sitemap</a></li>
-                                <li><a href="#">Terms &amp; Conditions</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Delivery Information</a></li>
+                                <li><a href="{{route('about.us')}}">About Us</a></li>
+                                <li><a href="{{route('contact')}}">Contact Us</a></li>
+                                <li><a href="{{route('about.us')}}">Carrer</a></li>
+                                <li><a href="{{route('policy')}}">Terms &amp; Conditions</a></li>
+                                <li><a href="{{route('policy')}}">Privacy Policy</a></li>
+                                <li><a href="{{route('product-list')}}">Shop</a></li>
                             </ul>
                         </div>
                     </div>
@@ -649,13 +603,13 @@
                             <h4>Contact Us</h4>
                             <ul>
                                 <li>
-                                    <p><i class="fas fa-map-marker-alt"></i>Address: Michael I. Days 3756 <br>Preston Street Wichita,<br> KS 67213 </p>
+                                    <p><i class="fas fa-map-marker-alt"></i>@foreach($settings as $data) {{$data->address}} @endforeach</p>
                                 </li>
                                 <li>
-                                    <p><i class="fas fa-phone-square"></i>Phone: <a href="tel:+1-888705770">+1-888 705 770</a></p>
+                                    <p><i class="fas fa-phone-square"></i>Phone: <a href="">@foreach($settings as $data) {{$data->phone}} @endforeach</a></p>
                                 </li>
                                 <li>
-                                    <p><i class="fas fa-envelope"></i>Email: <a href="mailto:contactinfo@gmail.com">contactinfo@gmail.com</a></p>
+                                    <p><i class="fas fa-envelope"></i>Email: <a href="">@foreach($settings as $data) {{$data->email}} @endforeach</a></p>
                                 </li>
                             </ul>
                         </div>
@@ -668,29 +622,94 @@
 
     <!-- Start copyright  -->
     <div class="footer-copyright">
-        <p class="footer-company">All Rights Reserved. &copy; 2018 <a href="#">ThewayShop</a> Design By :
-            <a href="https://html.design/">html design</a></p>
+        @foreach ($settings as $data)
+        <?php $currentYear = date('Y'); ?>
+        <p class="footer-company">All Rights Reserved. &copy; {{ $currentYear }} <a href="#">{{ $data->title }}</a> Develop By :
+            <a href="https://twitter.com/erlang_stack">Erlangga Rychlewski</a>
+        </p>
+        @endforeach
+    
     </div>
     <!-- End copyright  -->
 
     <a href="#" id="back-to-top" title="Back to top" style="display: none;">&uarr;</a>
 
+    
     <!-- ALL JS FILES -->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="{{asset('frontend/js/jquery-3.2.1.min.js')}}"></script>
+    <script src="{{asset('frontend/js/popper.min.js')}}"></script>
+    <script src="{{asset('frontend/js/bootstrap.min.js')}}"></script>
     <!-- ALL PLUGINS -->
-    <script src="js/jquery.superslides.min.js"></script>
-    <script src="js/bootstrap-select.js"></script>
-    <script src="js/inewsticker.js"></script>
-    <script src="js/bootsnav.js."></script>
-    <script src="js/images-loded.min.js"></script>
-    <script src="js/isotope.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/baguetteBox.min.js"></script>
-    <script src="js/form-validator.min.js"></script>
-    <script src="js/contact-form-script.js"></script>
-    <script src="js/custom.js"></script>
+    <script src="{{asset('frontend/js/jquery.superslides.min.js')}}"></script>
+    <script src="{{asset('frontend/js/bootstrap-select.js')}}"></script>
+    <script src="{{asset('frontend/js/inewsticker.js')}}"></script>
+    <script src="{{asset('frontend/js/bootsnav.js')}}"></script>
+    <script src="{{asset('frontend/js/images-loded.min.js')}}"></script>
+    <script src="{{asset('frontend/js/isotope.min.js')}}"></script>
+    <script src="{{asset('frontend/js/owl.carousel.min.js')}}"></script>
+    <script src="{{asset('frontend/js/baguetteBox.min.js')}}"></script>
+    <script src="{{asset('frontend/js/form-validator.min.js')}}"></script>
+    <script src="{{asset('frontend/js/contact-form-script.js')}}"></script>
+    <script src="{{asset('frontend/js/custom.js')}}"></script>
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-title text-center">
+                <h4>Login</h4>
+              </div>
+              <div class="d-flex flex-column text-center">
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+            
+                    <!-- Email Address -->
+                    <div class="form-group">
+                        <x-input-label for="email" :value="__('Email')" />
+                        <x-text-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    </div>
+            
+                    <!-- Password -->
+                    <div class="form-group">
+                        <x-input-label for="password" :value="__('Password')" />
+            
+                        <x-text-input id="password" class="form-control"
+                                        type="password"
+                                        name="password"
+                                        required autocomplete="current-password" />
+            
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    </div>
+                    <x-primary-button class="btn hvr-hover">
+                        {{ __('Log in') }}
+                    </x-primary-button>
+                </form>
+                
+                <div class="text-center text-muted delimiter">or use a social network</div>
+                <div class="d-flex justify-content-center social-buttons">
+                  <a  class="btn hvr-hover" href="{{ route('login.redirect', 'google') }}" data-toggle="tooltip" data-placement="top" title="google">
+                    <i class="fab fa-google"></i>
+                  </a>
+                  <a class="btn hvr-hover" href="{{ route('login.redirect', 'facebook') }}" data-toggle="tooltip" data-placement="top" title="Facebook">
+                    <i class="fab fa-facebook"></i>
+                  </a>
+                  <a class="btn hvr-hover" href="{{ route('login.redirect', 'twitter') }}" data-toggle="tooltip" data-placement="top" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </di>
+              </div>
+            </div>
+          </div>
+            <div class="modal-footer d-flex justify-content-center">
+              <div class="signup-section">Not a member yet? <a href="{{ route('register') }}" class="text-info"> Sign Up</a>.</div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

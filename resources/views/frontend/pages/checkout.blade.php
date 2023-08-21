@@ -32,8 +32,19 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{asset('frontend/css/custom.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-</head>
-
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        @media (max-width: 768px) {
+            .select2-container {
+                width: 100% !important; /* Menyesuaikan lebar 100% pada perangkat seluler */
+            }
+        }
+        @media (max-width: 1071px) {
+            .select2-container {
+                width: 100% !important; /* Menyesuaikan lebar 100% pada perangkat seluler */
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -232,143 +243,187 @@
     </div>
     <!-- End Top Search -->
 
-    <!-- Start Slider -->
-    @if($banner)
-    <div id="slides-shop" class="cover-slides">
-        <ul class="slides-container">
-            @foreach ($banner as $banners)
-            <li class="text-center">
-                <img src="{{$banners->photo}}" alt="">
-                <div class="container">
+    <!-- Start All Title Box -->
+    <div class="all-title-box">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Checkout</h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item active">Checkout</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End All Title Box -->
+
+    <!-- Start Cart  -->
+    <form class="cart-box-main" method="POST" action="{{route('cart.order')}}">
+        @csrf
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-lg-6 mb-3">
+                    <div class="checkout-address">
+                        <div class="title-left">
+                            <h3>Billing address</h3>
+                        </div>
+                        <form class="needs-validation" novalidate>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="firstName">First name *</label>
+                                    <input type="text" class="form-control" name="first_name"  placeholder="" value="" required>
+                                    <div class="invalid-feedback"> Valid first name is required. </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="lastName">Last name *</label>
+                                    <input type="text" class="form-control" name="last_name" placeholder="" value="" required>
+                                    <div class="invalid-feedback"> Valid last name is required. </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="username">Number</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="username" placeholder="" name="phone" required>
+                                    <div class="invalid-feedback" style="width: 100%;"> Your number is required. </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="">
+                                <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address">Address *</label>
+                                <input type="text" class="form-control" name="address1" placeholder="" required>
+                                <div class="invalid-feedback"> Please enter your shipping address. </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address2">Address 2 *</label>
+                                <input type="text" class="form-control" name="address2" placeholder=""> </div>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label for="zip">Country</label>
+                                    <input type="text" class="form-control" name="country" placeholder="" required>
+                                    <div class="invalid-feedback"> Country </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="zip">province</label>
+                                    <input type="text" class="form-control" name="province" placeholder="" required>
+                                    <div class="invalid-feedback">Province </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="zip">Postcode / Zip</label>
+                                    <input type="text" class="form-control" name="post_code" placeholder="" required>
+                                    <div class="invalid-feedback"> Postcode / Zip </div>
+                                </div>
+                            </div>
+                            <hr class="mb-4">
+                            <div class="title"> <span>Payment</span> </div>
+                            <div class="d-block my-3">
+                                <div class="custom-control custom-radio">
+                                    <input id="credit" name="payment_method" type="radio" value="cod" class="custom-control-input" checked required>
+                                    <label class="custom-control-label"  for="credit">Cash on Delivery</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input id="debit" name="payment_method" type="radio" value="cod" class="custom-control-input" required>
+                                    @foreach ($settings as $data)
+                                    <label class="custom-control-label" for="debit">{{$data->title}}</label>
+                                    @endforeach
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-6 mb-3">
                     <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="m-b-20"><strong>{{$banners->title}}</strong></h1>
-                            <p class="m-b-40">{{$banners->description}}</p>
-                            <p><a class="btn hvr-hover" href="#">Shop New</a></p>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            @endforeach
-        </ul>
-        <div class="slides-navigation">
-            <a href="#" class="next"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
-            <a href="#" class="prev"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
-        </div>
-    </div>
-    @endif
-    <!-- End Slider -->
-
-    <!-- Start Categories  -->
-    <div class="categories-shop">
-        <div class="container">
-            <div class="row">
-                @if ($categories)
-                @foreach ($categories as $cat)
-                @if($cat->is_parent==1)
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                    <div class="shop-cat-box">
-                        <img class="img-fluid" src="{{$cat->photo}}" alt="" />
-                        <a class="btn hvr-hover" href="{{route('product-cat',$cat->slug)}}">{{$cat->title}}</a>
-                    </div>
-                </div>
-                @endif
-                @endforeach
-                @endif
-            </div>
-        </div>
-    </div>
-    <!-- End Categories -->
-	
-	<div class="box-add-products">
-		<div class="container">
-			<div class="row">
-                @if ($smallerbanner)
-                @foreach ($smallerbanner as $key => $smallbanner)
-				<div class="col-lg-6 col-md-6 col-sm-12">
-					<div class="offer-box-products">
-						<img class="img-fluid" src="{{$smallbanner->photo}}" alt="" />
-					</div>
-				</div>
-                @endforeach
-                @endif
-			</div>
-		</div>
-	</div>
-
-    <!-- Start Products  -->
-    <div class="products-box">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="title-all text-center">
-                        <h1>Fruits & Vegetables</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="special-menu text-center">
-                        @php
-                            $categories=DB::table('categories')->where('status','active')->where('is_parent',1)->paginate(10);
-                            // dd($categories);
-                        @endphp
-                        <div class="button-group filter-button-group">
-                            <button class="active" data-filter="*">All</button>
-                            @if($categories)
-                            @foreach($categories as $key=>$cat)
-                            <button data-filter=" .{{$cat->id}}">{{$cat->title}}</button>
-                            @endforeach
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row special-list">
-                @foreach ($featured as $key=>$product)
-                <div class="col-lg-3 col-md-6 special-grid {{$product->cat_id}}">
-                    <div class="products-single fix">
-                        <div class="box-img-hover">
-                            <div class="type-lb">
-                                @if($product->stock<=0)
-                                <p class="out-of-stock">Sale out</p>
-                            @elseif($product->condition=='new')
-                                <p class="new">New</p>
-                            @elseif($product->condition=='hot')
-                                <p class="hot">Hot</p>
-                            @else
-                                <p class="price-dec">{{$product->discount}}% Off</p>
-                            @endif
-                            </div>
-                            @php
-                                $photo=explode(',',$product->photo);
-                                // dd($photo);
-                            @endphp
-                            <img src="{{$photo[0]}}" class="img-fluid" alt="Image">
-                            <div class="mask-icon">
-                                <ul>
-                                    <li><a href="{{route('product-detail',$product->slug)}}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
-                                    <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                    <li><a href="{{route('add-to-wishlist',$product->slug)}}" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
-                                </ul>
-                                <a class="cart" href="{{route('add-to-cart',$product->slug)}}">Add to Cart</a>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="shipping-method-box">
+                                <div class="title-left">
+                                    <h3>Shipping Method</h3>
+                                </div>
+                                <div class="mb-4">
+                                    <div class="shipping country-select clearfix">
+                                        <select class="wide w-100" required name="shipping" id="shipping-select">
+                                            <option value="" selected disabled>Cek</option>
+                                            @foreach(Helper::shipping() as $shipping)
+                                                <option value="{{$shipping->id}}" data-price="{{$shipping->price}}">{{$shipping->type}}: {{ $currency }} {{number_format($shipping->price, 2)}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="why-text">
-                            <h4>{{$product->title}}</h4>
-                            @php
-                                $after_discount=($product->price-($product->price*$product->discount)/100);
-                            @endphp
-                            <h5> {{number_format($after_discount,2)}}</h5>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="odr-box">
+                                <div class="title-left">
+                                    <h3>Shopping cart</h3>
+                                </div>
+                                <div class="rounded p-2 bg-light">
+                                    @foreach(Helper::getAllProductFromCart() as $key=>$cart)
+                                    <div class="media mb-2 border-bottom">
+                                        <div class="media-body"> <a href="detail.html">  {{$cart->product['title']}}</a>
+                                            <div class="small text-muted">Price: {{$cart->product['currency']}}{{number_format($cart['price'],2)}} <span class="mx-2">|</span> Qty: {{$cart->quantity}}</div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="order-box">
+                                <div class="title-left">
+                                    <h3>Your order</h3>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="font-weight-bold">Product</div>
+                                    <div class="ml-auto font-weight-bold">Total</div>
+                                </div>
+                                <hr class="my-1">
+                                <div class="d-flex">
+                                    <h4>Sub Total</h4>
+                                    <div class="ml-auto font-weight-bold"> {{number_format(Helper::totalCartPrice(),2)}}</div>
+                                </div>
+                                @if(session('coupon'))
+                                <hr class="my-1">
+                                <div class="d-flex">
+                                    <h4>Coupon Discount</h4>
+                                    <div class="ml-auto font-weight-bold"> {{number_format(session('coupon')['value'],2)}}</div>
+                                </div>
+                                @endif
+                                @php
+                                    $total_amount=Helper::totalCartPrice();
+                                    if(session('coupon')){
+                                        $total_amount=$total_amount-session('coupon')['value'];
+                                    }
+                                @endphp
+                                <div class="d-flex">
+                                    <h4>Shipping Cost</h4>
+                                    <div class="ml-auto font-weight-bold"> Free </div>
+                                </div>
+                                <hr>
+                                @if(session('coupon'))
+                                <div class="d-flex gr-total order_subtotal" id="order_total_price">
+                                    <h5>Grand Total</h5>
+                                    <div class="ml-auto h5"> {{ $currency }} {{number_format($total_amount,2)}}</div>
+                                </div>
+                                @else
+                                <div class="d-flex gr-total order_subtotal" id="order_total_price">
+                                    <h5>Grand Total</h5>
+                                    <div class="ml-auto h5"> {{ $currency }} {{number_format($total_amount,2)}}</div>
+                                </div>
+                                @endif
+                                <hr> </div>
+                        </div>
+                        <div class="col-12 d-flex shopping-box"> <button class="ml-auto btn hvr-hover" type="submit">Place Order</button> </div>
                     </div>
                 </div>
-                @endforeach
             </div>
+
         </div>
-    </div>
-    <!-- End Products  -->
+    </form>
+    <!-- End Cart -->
+
     @php
          $instagramfeed=DB::table('instagram_feed')->where('status','active')->paginate(10);
     @endphp
@@ -603,7 +658,26 @@
             </div>
         </div>
     </div>
-    
+    <script>
+        $(document).ready(function() {
+            $('#shipping-select').select2(); // Menggunakan plugin Select2 untuk fitur live search
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            let currency = "{{ $currency }}"; // mengambil kode mata uang dari variabel PHP
+            $('.shipping select[name=shipping]').change(function(){
+                let cost = parseFloat( $(this).find('option:selected').data('price') ) || 0;
+                let subtotal = parseFloat( $('.order_subtotal').data('price') ); 
+                let coupon = parseFloat( $('.coupon_price').data('price') ) || 0; 
+                let num = (subtotal + cost - coupon);
+                let formattedNum = num.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
+                $('#order_total_price span').text(currency + formattedNum); // menambahkan kode mata uang ke hasil perhitungan
+            });
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 </body>
 
 </html>

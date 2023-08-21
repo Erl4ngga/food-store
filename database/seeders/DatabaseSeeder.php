@@ -154,6 +154,9 @@ class DatabaseSeeder extends Seeder
         'status'=>'active',
         'is_featured' => true,
     ]);
-    
+    DB::table('shippings')->insert([
+        'type'=>"halo ke startup saya",
+        'price'=>2000,
+    ]);
     }
 }

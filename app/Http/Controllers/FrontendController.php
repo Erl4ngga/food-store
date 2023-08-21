@@ -111,7 +111,7 @@ class FrontendController extends Controller
     public function aboutus()
     {
         $adminusers=User::where('role','admin')->orderBy('id','ASC')->paginate(4);
-        $carrers=Carrer::orderBy('id','DESC')->paginate('4');
+        $carrers=Carrer::orderBy('id','DESC')->limit(2)->get();
         return view('frontend.pages.about-us')->with('adminusers',$adminusers)->with('carrers',$carrers);
     }
     public function contact()
